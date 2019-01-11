@@ -31,10 +31,10 @@ class CarBrandOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null && $this->requestData->PK != null) {
+        if($this->requestData != null && property_exists($this->requestData, "PK")) {
             $carBrand = new Carbrands();
-            $carBrand->brandName = $this->requestData->brandName;
             $carBrand->PK = $this->requestData->PK;
+            if (property_exists($this->requestData, "PK") )$carBrand->brandName = $this->requestData->brandName;
             $this->manager->changeData($carBrand);
             $this->readOne($carBrand->PK);
             $this->operationStatus = true;
@@ -49,7 +49,7 @@ class CarBrandOperation extends OperationBase {
     {
         if($this->requestData != null && property_exists($this->requestData, "PK")) {
         $carBrand = new Carbrands();
-        $carBrand->brandName = property_exists($this->requestData, "brandName") ? $this->requestData->brandName : null;
+        //$carBrand->brandName = property_exists($this->requestData, "brandName") ? $this->requestData->brandName : null;
         $carBrand->PK = $this->requestData->PK;
         $this->manager->deleteData($carBrand);
         $this->operationStatus = true;

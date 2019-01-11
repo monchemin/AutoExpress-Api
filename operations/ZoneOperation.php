@@ -1,11 +1,11 @@
 <?php
 namespace Operations;
 
-use Entities\CarModels;
+use Entities\Zones;
 use FactorOperations\FactorManager;
 
 
-class CarModelOperation extends OperationBase {
+class ZoneOperation extends OperationBase {
 
 
     function __construct(FactorManager $manager)
@@ -17,18 +17,18 @@ class CarModelOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(CarModels::class);
+         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Zones::class);
         $this->operationStatus = true;
     }
 
     protected function create()
     {
 
-        if($this->requestData != null && $this->requestData->modelName != null) {
-            $carModel = new CarModels();
-            $carModel->modelName = $this->requestData->modelName;
-            $carModel->FK_brand =property_exists($this->requestData, "FK_brand") ? $this->requestData->FK_brand : null;
-            $this->manager->insertData($carModel);
+        if($this->requestData != null && property_exists($this->requestData, "zoneName")) {
+            $zone = new Zones();
+            $zone->zoneName = $this->requestData->zoneName;
+            $zone->FK_City = property_exists($this->requestData, "FK_City") ? $this->requestData->FK_City : null;
+            $this->manager->insertData($zone);
             $this->operationStatus = true;
         }
     }
@@ -36,27 +36,27 @@ class CarModelOperation extends OperationBase {
     protected function update()
     {
         if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            $carModel = new CarModels();
-            $carModel->PK = $this->requestData->PK;
-           if(property_exists($this->requestData, "modelName")) $carModel->modelName = $this->requestData->modelName;
-           if(property_exists($this->requestData, "FK_brand")) $carModel->FK_brand = $this->requestData->FK_brand;
-            $this->manager->changeData($carModel);
-            $this->readOne($carModel->PK);
+            $zone = new Zones();
+            $zone->PK = $this->requestData->PK;
+            if(property_exists($this->requestData, "zoneName")) $zone->zoneName = $this->requestData->zoneName;
+           if(property_exists($this->requestData, "FK_City")) $zone->FK_City = $this->requestData->FK_City;
+            $this->manager->changeData($zone);
+            $this->readOne($zone->PK);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(CarModels::class, array(), array("PK" => $pk));
+         $this->manager->getData(Zones::class, array(), array("PK" => $pk));
     }
 
     protected function delete()
     {
         if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            $carModel = new CarModels();
-            $carModel->modelName = $this->requestData->modelName;
-            $carModel->PK = $this->requestData->PK;
-            $this->manager->deleteData($carModel);
+            $zone = new Zones();
+            $zone->zoneName = $this->requestData->zoneName;
+            $zone->PK = $this->requestData->PK;
+            $this->manager->deleteData($zone);
             $this->operationStatus = true;
         }
     }

@@ -1,11 +1,11 @@
 <?php
 namespace Operations;
 
-use Entities\CarModels;
+use Entities\Stages;
 use FactorOperations\FactorManager;
 
 
-class CarModelOperation extends OperationBase {
+class StageOperation extends OperationBase {
 
 
     function __construct(FactorManager $manager)
@@ -17,18 +17,19 @@ class CarModelOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(CarModels::class);
+         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Stages::class);
         $this->operationStatus = true;
     }
 
     protected function create()
     {
 
-        if($this->requestData != null && $this->requestData->modelName != null) {
-            $carModel = new CarModels();
-            $carModel->modelName = $this->requestData->modelName;
-            $carModel->FK_brand =property_exists($this->requestData, "FK_brand") ? $this->requestData->FK_brand : null;
-            $this->manager->insertData($carModel);
+        if($this->requestData != null && property_exists($this->requestData, "stageName")) {
+            $stage = new Stages();
+            $stage->stageName = $this->requestData->stageName;
+            $stage->stageAddress = property_exists($this->requestData, "stageAddress") ? $this->requestData->stageAddress : null;
+            $stage->FK_Zone = property_exists($this->requestData, "FK_Zone") ? $this->requestData->FK_Zone : null;
+            $this->manager->insertData($stage);
             $this->operationStatus = true;
         }
     }
@@ -36,27 +37,28 @@ class CarModelOperation extends OperationBase {
     protected function update()
     {
         if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            $carModel = new CarModels();
-            $carModel->PK = $this->requestData->PK;
-           if(property_exists($this->requestData, "modelName")) $carModel->modelName = $this->requestData->modelName;
-           if(property_exists($this->requestData, "FK_brand")) $carModel->FK_brand = $this->requestData->FK_brand;
-            $this->manager->changeData($carModel);
-            $this->readOne($carModel->PK);
+            $stage = new Stages();
+            $stage->PK = $this->requestData->PK;
+            if (property_exists($this->requestData, "stageName")) $stage->stageName = $this->requestData->stageName;
+            if (property_exists($this->requestData, "stageAddress")) $stage->stageAddress = $this->requestData->stageAddress;
+            if (property_exists($this->requestData, "FK_Zone")) $stage->FK_Zone = $this->requestData->FK_Zone;
+            $this->manager->changeData($stage);
+            $this->readOne($stage->PK);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(CarModels::class, array(), array("PK" => $pk));
+         $this->manager->getData(Stages::class, array(), array("PK" => $pk));
     }
 
     protected function delete()
     {
         if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            $carModel = new CarModels();
-            $carModel->modelName = $this->requestData->modelName;
-            $carModel->PK = $this->requestData->PK;
-            $this->manager->deleteData($carModel);
+            $stage = new Stages();
+            $stage->stageName = $this->requestData->stageName;
+            $stage->PK = $this->requestData->PK;
+            $this->manager->deleteData($stage);
             $this->operationStatus = true;
         }
     }

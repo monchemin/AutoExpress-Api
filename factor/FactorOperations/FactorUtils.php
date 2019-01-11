@@ -47,25 +47,28 @@ class FactorUtils {
      *          )
      * @return : query string
      */
-    public static function makeUpdateQuery($updateObjet, $filters=null) {
-        $classProperties = get_class_vars(get_class($updateObjet));
+    public static function makeUpdateQuery($updateObject, $filters=null) {
+        $classProperties = get_class_vars(get_class($updateObject));
         
-        $tableName = self::getTableName(get_class($updateObjet)); 
+        $tableName = self::getTableName(get_class($updateObject));
         $queryValues = array(); //query values as pdo statement (:columnName)
         $modificationColumns = array(); // query var (:columnName => value)
         $whereClause = array();
 
         foreach($classProperties as $property=>$value) {
             
-            $tableColumn = self::getTableColumn(get_class($updateObjet), $property);
-            $var = ":" . $tableColumn;
-            $modificationColumns[] = $tableColumn . "=" .  $var;
-            $queryVars[$var] = $updateObjet->$property;
-            if( self::isPrimaryKey($updateObjet, $property) ) {
+            $tableColumn = self::getTableColumn(get_class($updateObject), $property);
+
+            if( self::isPrimaryKey($updateObject, $property) ) {
                
                 $var = ":" . $tableColumn;
                 $whereClause[] = $tableColumn . "=". $var;
-                $queryValues[$var] = $updateObjet->$property;
+                $queryValues[$var] = $updateObject->$property;
+            }
+            if($updateObject->$property != null) {
+                $var = ":" . $tableColumn;
+                $modificationColumns[] = $tableColumn . "=" .  $var;
+                $queryVars[$var] = $updateObject->$property;
             }
 
         }

@@ -31,10 +31,10 @@ class CityOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null && $this->requestData->PK != null) {
+        if($this->requestData != null && property_exists($this->requestData, "PK")) {
             $City = new Cities();
-            $City->cityName = $this->requestData->cityName;
             $City->PK = $this->requestData->PK;
+            if(property_exists($this->requestData, "cityName")) $City->cityName = $this->requestData->cityName;
             $this->manager->changeData($City);
             $this->readOne($City->PK);
             $this->operationStatus = true;
