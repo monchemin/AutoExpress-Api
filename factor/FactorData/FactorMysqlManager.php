@@ -51,6 +51,7 @@ final class FactorMysqlManager implements IFactorDbManager {
     }
 
     public function getData($queryString, $pamarsArray=null) {
+        $this->operationResult = new DataOperationResult();
         $pdoQuery = $this->pdo->prepare($queryString);
         try {
                 $pdoQuery->execute($pamarsArray);
@@ -70,6 +71,7 @@ final class FactorMysqlManager implements IFactorDbManager {
     
 
     public function ModifyData($queryString, $pamarsArray=null, $returnLine=false){
+        $this->operationResult = new DataOperationResult();
         $pdoQuery = $this->pdo->prepare($queryString);
         try {
                 $pdoQuery->execute($pamarsArray);

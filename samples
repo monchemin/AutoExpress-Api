@@ -1,0 +1,37 @@
+customers
+{"checkLogin": "monchemin"}
+
+{
+"customerFistName" : "nyemo" ,
+"customerLastName": "koumadi",
+"customerPhoneNumber": "4184901660",
+"customerEMailAddress" : "monchemin@hotmail.com",
+"customerLogin" : "monchemin",
+"customerPassword" : "geo"
+}
+
+----------------------
+
+drivers
+{
+"PK" : "nyemo" ,
+"drivingPermitNumber": "koumadi",
+"carRegistrationNumber": "4184901660",
+"carYear" : "monchemin@hotmail.com",
+"FK_carmodel" : "monchemin",
+"FK_carcolor" : "geo"
+}
+-------
+carModel
+{
+	"PK" : 1,
+	"modelName" : "camry",
+	"FK_brand" : 1
+}
+---
+carBrand
+{
+	"PK" : 1,
+	"brandName" : "Toyota"
+}
+--

@@ -19,11 +19,11 @@ final class FactorManager {
 
     protected function __construct($arrayConfig) {
         $this->connexion = $this -> makeConnexion($arrayConfig);
-        $this->managerOperationResult = new ManagerOperationResult();
         $this->retrieveResult();
 
     }
     private function retrieveResult() {
+        $this->managerOperationResult = new ManagerOperationResult();
         $this->managerOperationResult->status = $this->connexion->operationResult()->status;
         $this->managerOperationResult->errorMessage = $this->connexion->operationResult()->errorMessage;
         $this->managerOperationResult->lastIndex = $this->connexion->operationResult()->lastIndex;
