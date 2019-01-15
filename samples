@@ -22,16 +22,35 @@ drivers
 "FK_carcolor" : "geo"
 }
 -------
-carModel
+carModels
 {
 	"PK" : 1,
 	"modelName" : "camry",
 	"FK_brand" : 1
 }
 ---
-carBrand
+carBrands
 {
 	"PK" : 1,
 	"brandName" : "Toyota"
 }
 --
+PickupHours
+{
+	"PK" : 1,
+	"hour" : 00h00
+	"displayOrder" : 1
+}
+
+-------
+Routes 
+{
+	"PK" : ,
+	"routeDate" : "14/01/2019",
+	"routePlace" : 3,
+	"routePrice" : 150,
+	"FK_Hour" : 2,
+	"FK_Driver" : 1,
+	"FK_DepartureStage" : 1,
+	"FK_ArrivalStage" : 2
+}

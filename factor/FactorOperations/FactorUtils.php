@@ -128,7 +128,7 @@ class FactorUtils {
         foreach($classProperties as $property => $value) {
             $tableColumn = self::getTableColumn($strClassName, $property) !==null ? self::getTableColumn($strClassName, $property) : $property;
             if( in_array($property, $fieldList) ) $filters[] = $tableColumn;
-            if( in_array($property, $orderByArray) ) $orderBy[$tableColumn] = $orderByArray[$property];
+            if( in_array($property, $orderByArray) ) $orderBy[] = $tableColumn;
             if( array_key_exists($property, $whereArray) ) {
                 $var = ":".$tableColumn;
                 $whereClause[] = $tableColumn."=".$var;
