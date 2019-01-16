@@ -32,7 +32,7 @@ class CustomerOperation extends OperationBase {
             $customer->customerPhoneNumber = property_exists($this->requestData, "customerPhoneNumber") ? $this->requestData->customerPhoneNumber : null;
             $customer->customerLogin = property_exists($this->requestData, "customerLogin") ? $this->requestData->customerLogin : null;
             $customer->customerPassword = property_exists($this->requestData, "customerPassword") ? $this->requestData->customerPassword : null;
-
+            $customer->customerDateCreate = date("Y-m-d H:i:s");
             $this->manager->insertData($customer);
             $this->operationStatus = true;
         }

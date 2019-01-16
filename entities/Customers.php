@@ -37,6 +37,10 @@ class Customers {
      * @ORM\TableColumn(columnName="customerPassword")
      */
     public $customerPassword;
+    /**
+     * @ORM\TableColumn(columnName="customerDateCreate")
+     */
+    public $customerDateCreate;
 
 }
 ?>

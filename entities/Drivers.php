@@ -35,7 +35,10 @@ class Drivers {
      * @ORM\TableColumn(columnName="FK_carcolor")
      */
     public $FK_carcolor;
-
+    /**
+     * @ORM\TableColumn(columnName="driverDateCreate")
+     */
+    public $driverDateCreate;
 
 
 }

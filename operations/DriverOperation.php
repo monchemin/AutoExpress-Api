@@ -33,6 +33,7 @@ class DriverOperation extends OperationBase {
             $driver->carYear = property_exists($this->requestData, "carYear") ? $this->requestData->carYear : null;
             $driver->FK_carcolor = property_exists($this->requestData, "FK_carcolor") ? $this->requestData->FK_carcolor : null;
             $driver->FK_carmodel = property_exists($this->requestData, "FK_carmodel") ? $this->requestData->FK_carmodel : null;
+            $driver->driverDateCreate = date("Y-m-d H:i:s");
             $this->manager->insertData($driver);
             $this->operationStatus = true;
         }

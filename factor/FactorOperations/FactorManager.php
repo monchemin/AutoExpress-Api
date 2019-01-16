@@ -29,7 +29,7 @@ final class FactorManager {
         $this->managerOperationResult->lastIndex = $this->connexion->operationResult()->lastIndex;
         $this->managerOperationResult->resultData = $this->connexion->operationResult()->resultData;
 }
-    // choisi la connexion par rapport au driver spécifier dans le tableau de configuration
+    // make connection with configuration table
     protected function makeConnexion($arrayConfig) {
         switch (strtolower($arrayConfig['dbdriver'])) {
             case  'mysql' :
