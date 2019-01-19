@@ -16,5 +16,5 @@ $dbConnection = array('dbdriver'    => 'Mysql',
                         'password'  => ''
                       );
 $manager = FactorManager::create($dbConnection);
-return $manager; 
+return $manager;
 ?>

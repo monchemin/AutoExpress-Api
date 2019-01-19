@@ -27,7 +27,7 @@ final class FactorManager {
         $this->managerOperationResult->status = $this->connexion->operationResult()->status;
         $this->managerOperationResult->errorMessage = $this->connexion->operationResult()->errorMessage;
         $this->managerOperationResult->lastIndex = $this->connexion->operationResult()->lastIndex;
-        $this->managerOperationResult->resultData = $this->connexion->operationResult()->resultData;
+        $this->managerOperationResult->response = $this->connexion->operationResult()->resultData;
 }
     // make connection with configuration table
     protected function makeConnexion($arrayConfig) {
@@ -65,7 +65,7 @@ final class FactorManager {
         $queryAndParams = FactorUtils::makeGetDataQuery($strClassName, $fieldList, $whereArray, $orderByArray);
         $this->connexion->getData($queryAndParams['query'], $queryAndParams['sqlVars']);
         $this->retrieveResult();
-        $queryResults = $this->managerOperationResult->resultData;
+        $queryResults = $this->managerOperationResult->response;
         $bind = FactorUtils::getPropertyBindColumn($strClassName);
         $resultInstance = array();
         if($this->managerOperationResult->status == 200) {
@@ -80,7 +80,7 @@ final class FactorManager {
                     $resultInstance[] = $newInstance;
                 }
 
-                $this->managerOperationResult->resultData = $resultInstance;
+                $this->managerOperationResult->response = $resultInstance;
             }
             else $this->managerOperationResult->status = 110;
 
@@ -91,7 +91,9 @@ final class FactorManager {
  * data retrieve by complexe query
  */
     public function getDataByQuery($query, $params) {
-        return new EntityManager($query, $params, $this->connexion);
+        //return new EntityManager($query, $params, $this->connexion);
+        $this->connexion->getData($query, $params);
+        $this->retrieveResult();
     }
 
     protected function getObjectVarsValues($insertObject) {

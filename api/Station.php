@@ -8,13 +8,14 @@
 namespace api;
 
 
-use Operations\StageOperation;
+use Entities\Stations;
+use Operations\StationOperation;
 
 
 require_once 'ApiHeader.php';
 
-$stageOperation = new StageOperation($manager);
-$operationResult = $stageOperation->process();
+$stationOperation = new StationOperation($manager);
+$operationResult = $stationOperation->process();
 echo json_encode($operationResult);
 
 ?>

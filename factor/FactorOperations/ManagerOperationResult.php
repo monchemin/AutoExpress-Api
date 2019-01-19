@@ -13,6 +13,6 @@ class ManagerOperationResult
 {
     public $status;
     public $lastIndex;
-    public $resultData;
+    public $response;
     public $errorMessage;
 }

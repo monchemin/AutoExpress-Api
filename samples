@@ -14,12 +14,12 @@ customers
 
 drivers
 {
-"PK" : "nyemo" ,
-"drivingPermitNumber": "koumadi",
+"PK" : 4 ,
+"drivingPermitNumber": "D012-1109-543",
 "carRegistrationNumber": "4184901660",
-"carYear" : "monchemin@hotmail.com",
-"FK_carmodel" : "monchemin",
-"FK_carcolor" : "geo"
+"carYear" : 2016,
+"FK_carmodel" : 1,
+"FK_carcolor" : 1
 }
 -------
 carModels
@@ -46,11 +46,64 @@ PickupHours
 Routes 
 {
 	"PK" : ,
-	"routeDate" : "14/01/2019",
+	"routeDate" : "2019/01/21",
 	"routePlace" : 3,
 	"routePrice" : 150,
 	"FK_Hour" : 2,
-	"FK_Driver" : 1,
-	"FK_DepartureStage" : 1,
-	"FK_ArrivalStage" : 2
+	"FK_Driver" : 4,
+	"FK_DepartureStage" : 4,
+	"FK_ArrivalStage" : 3
 }
+
+-----
+Reservations 
+{
+	"PK" : 1,
+	"reservationDate" : "2019/01/14",
+	"FK_Route" : 1,
+	"FK_Customer" : 1
+}
+
+User
+{
+	"PK" : 1,
+	"userName" : "",
+	"userLogin" : "",
+	"userPassword" : ""
+}
+------
+userCheklogin
+{
+	"checkLogin" : monchemin
+}
+----
+Cities
+{
+	"PK" : 1,
+	"cityName" : "POG"
+}
+----
+Zones 
+{
+	"PK" : 1,
+	"zoneName" : "",
+	"FK_City" : 1
+}
+-----
+Station
+{
+	"PK" : 1,
+	"stationName" : "Charbonnage",
+	"stationAddress" : "SEEG",
+	"FK_Zone" : 1
+}
+
+InternalRoute
+{
+"fromStation" : 1,
+	"toStation" : 2,
+	"startDate" : "",
+	"endDate" : "",
+  "fromHour" : 1,
+  "toHour" : 4
+  }

@@ -78,7 +78,7 @@ class RouteOperation extends OperationBase {
         $exists = false;
         $this->manager->getData(Drivers::class, array(), array("PK" => $this->requestData->FK_Driver));
         $loginResult = $this->manager->managerOperationResult;
-        if($loginResult->status == 200 && $loginResult->resultData != null) $exists = true;
+        if($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;
     }
 

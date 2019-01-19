@@ -74,7 +74,7 @@ class DriverOperation extends OperationBase {
         $exists = false;
         $this->manager->getData(Customers::class, array(), array("PK" => $this->requestData->PK));
         $loginResult = $this->manager->managerOperationResult;
-        if($loginResult->status == 200 && $loginResult->resultData != null) $exists = true;
+        if($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;
     }
 
