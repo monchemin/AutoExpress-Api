@@ -1,68 +1,104 @@
-customers
-{"checkLogin": "monchemin"}
+carBrands (http://autoexpress.gabways.com/api/carbrand.php)
+{
+	"PK": 1,
+	"brandName": "Toyota"
+}
+-------
+carModels (http://autoexpress.gabways.com/api/carModel.php)
+{
+	"PK": 1,
+	"modelName": "camry",
+	"FK_brand": 1
+}
+
+carColors (http://autoexpress.gabways.com/api/carColor.php)
+{
+	"PK": 1,
+	"colorName": "Rouge"
+}
+
+Cities (http://autoexpress.gabways.com/api/city.php)
+{
+	"PK": 1,
+	"cityName": "POG"
+}
+
+Zones (http://autoexpress.gabways.com/api/zone.php)
+{
+	"PK": 1,
+	"zoneName": "",
+	"FK_City": 1
+}
+-----
+Station (http://autoexpress.gabways.com/api/station.php)
+{
+	"PK" : 1,
+	"stationName" : "Rond point",
+	"stationAddress" : "dans la station de service",
+	"FK_Zone" : 1
+}
+
+PickupHours (http://autoexpress.gabways.com/api/pickuphour.php)
+{
+	"PK": 1,
+	"hour": "00h00",
+	"displayOrder": 1
+}
+
+customers (http://autoexpress.gabways.com/api/customer.php)
+{"checkLogin": "monchemin"} pour verifier en live l'existence du login
 
 {
-"customerFistName" : "nyemo" ,
+"customerFistName": "nyemo" ,
 "customerLastName": "koumadi",
 "customerPhoneNumber": "4184901660",
-"customerEMailAddress" : "monchemin@hotmail.com",
-"customerLogin" : "monchemin",
-"customerPassword" : "geo"
+"customerEMailAddress": "monchemin@hotmail.com",
+"customerLogin": "monchemin",
+"customerPassword": "geo"
 }
 
-----------------------
 
-drivers
+drivers (http://autoexpress.gabways.com/api/driver.php)
 {
-"PK" : 4 ,
+"PK": 1 , //doit etre un id de customer existant
 "drivingPermitNumber": "D012-1109-543",
 "carRegistrationNumber": "4184901660",
-"carYear" : 2016,
-"FK_carmodel" : 1,
-"FK_carcolor" : 1
-}
--------
-carModels
-{
-	"PK" : 1,
-	"modelName" : "camry",
-	"FK_brand" : 1
-}
----
-carBrands
-{
-	"PK" : 1,
-	"brandName" : "Toyota"
-}
---
-PickupHours
-{
-	"PK" : 1,
-	"hour" : 00h00
-	"displayOrder" : 1
+"carYear": 2016,
+"FK_carmodel": 1,
+"FK_carcolor": 1
 }
 
--------
-Routes 
+
+Routes (http://autoexpress.gabways.com/api/route.php)
 {
-	"PK" : ,
-	"routeDate" : "2019/01/21",
-	"routePlace" : 3,
-	"routePrice" : 150,
-	"FK_Hour" : 2,
-	"FK_Driver" : 4,
-	"FK_DepartureStage" : 4,
-	"FK_ArrivalStage" : 3
+	"PK": 1,
+	"routeDate": "2019/01/26",
+	"routePlace": 3,
+	"routePrice": 150,
+	"FK_Hour": 2,
+	"FK_Driver": 1,
+	"FK_DepartureStage": 1,
+	"FK_ArrivalStage": 2
 }
 
------
-Reservations 
+
+Reservations (http://autoexpress.gabways.com/api/reservation.php)
 {
-	"PK" : 1,
-	"reservationDate" : "2019/01/14",
-	"FK_Route" : 1,
-	"FK_Customer" : 1
+	"PK": 1,
+	"reservationDate": "2019/01/26",
+	"FK_Route": 1,
+	"FK_Customer": 2
 }
+
+InternalRoute (http://autoexpress.gabways.com/api/internalRoutes.php)
+{
+	"fromStation": 1,
+	"toStation": 2,
+	"startDate": "",
+	"endDate": "",
+ 	"fromHour": 1,
+  	"toHour": 4
+ }
 
 User
 {
@@ -77,33 +113,5 @@ userCheklogin
 	"checkLogin" : monchemin
 }
 ----
-Cities
-{
-	"PK" : 1,
-	"cityName" : "POG"
-}
-----
-Zones 
-{
-	"PK" : 1,
-	"zoneName" : "",
-	"FK_City" : 1
-}
------
-Station
-{
-	"PK" : 1,
-	"stationName" : "Charbonnage",
-	"stationAddress" : "SEEG",
-	"FK_Zone" : 1
-}
 
-InternalRoute
-{
-"fromStation" : 1,
-	"toStation" : 2,
-	"startDate" : "",
-	"endDate" : "",
-  "fromHour" : 1,
-  "toHour" : 4
-  }
+
