@@ -47,10 +47,12 @@ class CarBrandOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
-        $carBrand = new Carbrands();
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        if($this->pk != 0) {
+            $carBrand = new Carbrands();
         //$carBrand->brandName = property_exists($this->requestData, "brandName") ? $this->requestData->brandName : null;
-        $carBrand->PK = $this->requestData->PK;
+        //$carBrand->PK = $this->requestData->PK;
+        $carBrand->PK = $this->pk;
         $this->manager->deleteData($carBrand);
         $this->operationStatus = true;
         }
@@ -63,7 +65,7 @@ class CarBrandOperation extends OperationBase {
         switch ($this->httpMethod) {
             case "POST" :
                 $this->create();
-                $this->read();
+                //$this->read();
                 break;
             case "PUT" :
                  $this->update();
@@ -73,7 +75,7 @@ class CarBrandOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+                //$this->read();
         }
         return $this->operationResult();
 

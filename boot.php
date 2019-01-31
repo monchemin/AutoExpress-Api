@@ -8,7 +8,7 @@ require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorAnn
 //use Factor\FactorOperations\FactorManager;
 use FactorOperations\FactorManager;
 
-DEFINE("DEV", false);
+DEFINE("DEV", true);
 
 if(DEV) {
     DEFINE('ENGINE', 'Mysql');
