@@ -54,10 +54,11 @@ class UserOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $user = new Users();
 
-            $user->PK = $this->requestData->PK;
+            $user->PK = $this->pk;
             $this->manager->deleteData($user);
             $this->operationStatus = true;
         }

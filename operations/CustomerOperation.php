@@ -60,10 +60,11 @@ class CustomerOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $customer = new Customers();
 
-            $customer->PK = $this->requestData->PK;
+            $customer->PK = $this->pk;
             $this->manager->deleteData($customer);
             $this->operationStatus = true;
         }
@@ -73,7 +74,7 @@ class CustomerOperation extends OperationBase {
         $loginExists = false;
         $this->manager->getData(Customers::class, array(), array("customerLogin" => $this->requestData->checkLogin));
         $loginResult = $this->manager->managerOperationResult;
-        if($loginResult->status == 200 && $loginResult->resultData != null) $loginExists = true;
+        if($loginResult->status == 200 && $loginResult->response != null) $loginExists = true;
         return array("status" => $loginResult->status, "loginExists" => $loginExists);
     }
 

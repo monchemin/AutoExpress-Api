@@ -54,10 +54,11 @@ class stationOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $station = new Stations();
-            $station->stationName = $this->requestData->stationName;
-            $station->PK = $this->requestData->PK;
+            //$station->stationName = $this->requestData->stationName;
+            $station->PK = $this->pk;
             $this->manager->deleteData($station);
             $this->operationStatus = true;
         }

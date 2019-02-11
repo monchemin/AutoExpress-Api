@@ -65,10 +65,11 @@ class RouteOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $route = new Routes();
 
-            $route->PK = $this->requestData->PK;
+            $route->PK = $this->pk;
             $this->manager->deleteData($route);
             $this->operationStatus = true;
         }

@@ -47,10 +47,11 @@ class CityOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
         $City = new Cities();
-        $City->cityName = property_exists($this->requestData, "cityName") ? $this->requestData->cityName : null;
-        $City->PK = $this->requestData->PK;
+        //$City->cityName = property_exists($this->requestData, "cityName") ? $this->requestData->cityName : null;
+        $City->PK = $this->pk;
         $this->manager->deleteData($City);
         $this->operationStatus = true;
         }

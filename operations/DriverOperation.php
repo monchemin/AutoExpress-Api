@@ -61,10 +61,11 @@ class DriverOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $driver = new Drivers();
 
-            $driver->PK = $this->requestData->PK;
+            $driver->PK = $this->pk;
             $this->manager->deleteData($driver);
             $this->operationStatus = true;
         }

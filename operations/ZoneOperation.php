@@ -52,10 +52,11 @@ class ZoneOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $zone = new Zones();
-            $zone->zoneName = $this->requestData->zoneName;
-            $zone->PK = $this->requestData->PK;
+            //$zone->zoneName = $this->requestData->zoneName;
+            $zone->PK = $this->pk;
             $this->manager->deleteData($zone);
             $this->operationStatus = true;
         }

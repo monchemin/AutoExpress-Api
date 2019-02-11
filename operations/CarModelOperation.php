@@ -52,10 +52,11 @@ class CarModelOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $carModel = new CarModels();
-            $carModel->modelName = $this->requestData->modelName;
-            $carModel->PK = $this->requestData->PK;
+            //$carModel->modelName = $this->requestData->modelName;
+            $carModel->PK = $this->pk;
             $this->manager->deleteData($carModel);
             $this->operationStatus = true;
         }

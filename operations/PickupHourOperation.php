@@ -52,9 +52,10 @@ class PickupHourOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $pickupHour = new PickupHours();
-            $pickupHour->PK = $this->requestData->PK;
+            $pickupHour->PK = $this->pk;
             $this->manager->deleteData($pickupHour);
             $this->operationStatus = true;
         }

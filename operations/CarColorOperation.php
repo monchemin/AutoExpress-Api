@@ -47,13 +47,18 @@ class CarColorOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && $this->requestData->PK != null) {
+        //if($this->requestData != null && $this->requestData->PK != null) {
+            if($this->pk != 0 && isset($this->manager)) {
+               
             $carColor = new CarColors();
-            $carColor->colorName = $this->requestData->colorName;
-            $carColor->PK = $this->requestData->PK;
+           
+            //$carColor->colorName = $this->requestData->colorName;
+            $carColor->PK = $this->pk;
+            //print_r($this->manager);
             $this->manager->deteleData($carColor);
             $this->operationStatus = true;
         }
+
     }
 
     public function process()
@@ -73,7 +78,7 @@ class CarColorOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+                //$this->read();
         }
         return $this->operationResult();
 

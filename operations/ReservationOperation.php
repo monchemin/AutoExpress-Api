@@ -55,10 +55,11 @@ class ReservationOperation extends OperationBase {
 
     protected function delete()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
+            if($this->pk != 0) {
             $reservation = new Reservations();
 
-            $reservation->PK = $this->requestData->PK;
+            $reservation->PK = $this->pk;
             $this->manager->deleteData($reservation);
             $this->operationStatus = true;
         }
