@@ -100,6 +100,17 @@ class CustomerOperation extends OperationBase {
         return $this->operationResult();
 
     }
+    public function login() {
+        if( $this->requestData != null && property_exists($this->requestData, "login")) {
+            $this->manager->getData(Customers::class, array(), 
+                    array("customerLogin" => $this->requestData->login, "customerPassword"=>$this->requestData->password)
+                );
+            if($this->manager->managerOperationResult->status == 200 && count($this->manager->managerOperationResult->response)==1 ) {
+                return array("status"=>200, "isLog"=> true);
+            } else {return array("status"=>120, "isLog"=> false);}
+        
+        }
+    }
     protected function operationResult()
     {
         return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");

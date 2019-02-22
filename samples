@@ -113,5 +113,10 @@ userCheklogin
 	"checkLogin" : monchemin
 }
 ----
+adminlogin
+{
+	"login": "monchemin",
+	"password": "geo"
+}
 
 

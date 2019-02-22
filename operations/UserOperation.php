@@ -68,8 +68,20 @@ class UserOperation extends OperationBase {
         $loginExists = false;
         $this->manager->getData(Users::class, array(), array("userLogin" => $this->requestData->checkLogin));
         $loginResult = $this->manager->managerOperationResult;
-        if($loginResult->status == 200 && $loginResult->resultData != null) $loginExists = true;
+        if($loginResult->status == 200 && $loginResult->response != null) $loginExists = true;
         return array("status" => $loginResult->status, "loginExists" => $loginExists);
+    }
+
+    public function login() {
+        if( $this->requestData != null && property_exists($this->requestData, "login")) {
+            $this->manager->getData(Users::class, array(), 
+                    array("userLogin" => $this->requestData->login, "userPassword"=>$this->requestData->password)
+                );
+            if($this->manager->managerOperationResult->status == 200 && count($this->manager->managerOperationResult->response)==1 ) {
+                return array("status"=>200, "isLog"=> true);
+            } else {return array("status"=>120, "isLog"=> false);}
+        
+        }
     }
 
     public function process()

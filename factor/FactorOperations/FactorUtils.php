@@ -141,7 +141,7 @@ class FactorUtils {
         $select = empty($filters) ? " * " : implode(", ", $filters);
         $statement = "SELECT ". $select . " FROM " 
                         . self::getTableName($strClassName);
-        if(!empty($whereClause) ) $statement .= " WHERE " . implode("AND " , $whereClause);
+        if(!empty($whereClause) ) $statement .= " WHERE " . implode(" AND " , $whereClause);
         if(!empty($orderBy) )  $statement .= " ORDER BY ". implode(',', $orderBy);
                         
         return array("query" => $statement, "sqlVars" => $queryValues);
