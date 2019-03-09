@@ -15,4 +15,5 @@ class ManagerOperationResult
     public $lastIndex;
     public $response;
     public $errorMessage;
+    public $picker;
 }

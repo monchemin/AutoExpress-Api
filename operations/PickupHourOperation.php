@@ -85,7 +85,17 @@ class PickupHourOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->picker($this->manager->managerOperationResult) : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+    }
+
+    protected function picker($ar) {
+        $picker = array();
+        foreach($ar->response as $value) {
+           //echo $value->PK;
+             $picker[] = array('value'=>$value->PK, 'label'=>$value->hour);
+        }
+        $ar->picker = $picker;
+        return $ar;
     }
 }
 ?>
