@@ -86,7 +86,17 @@ class ZoneOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->picker($this->manager->managerOperationResult) : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+    }
+
+    protected function picker($data) {
+        $picker = array();
+        foreach($data->response as $value) {
+           //echo $value->PK;
+             $picker[] = array('value'=>$value->PK, 'label'=>$value->zoneName);
+        }
+        $data->picker = $picker;
+        return $data;
     }
 }
 ?>
