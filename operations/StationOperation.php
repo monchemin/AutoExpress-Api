@@ -93,6 +93,7 @@ class stationOperation extends OperationBase {
 
     protected function picker($data) {
         $picker = array();
+        
         foreach($data->response as $value) {
            //echo $value->PK;
              $picker[] = array('value'=>$value->PK, 'label'=>$value->stationName);

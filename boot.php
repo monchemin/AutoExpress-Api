@@ -4,7 +4,7 @@ require_once join(DIRECTORY_SEPARATOR, ['factor', 'autoload.php']);
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'vendor', 'autoload.php']);
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorAnnotations.php']);
 
-
+echo join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorAnnotations.php']);
 //use Factor\FactorOperations\FactorManager;
 use FactorOperations\FactorManager;
 
@@ -20,10 +20,10 @@ if(DEV) {
 else
 {
     DEFINE('ENGINE', 'Mysql');
-    DEFINE('HOST', '184.175.102.216');
-    DEFINE('DBNAME', 'autoexpress');
-    DEFINE('USER', 'autoexpress');
-    DEFINE('PASSWORD', 'AutoExpress@2019');
+    DEFINE('HOST', 'localhost');
+    DEFINE('DBNAME', 'residenc_autoexpress');
+    DEFINE('USER', 'residenc_auto');
+    DEFINE('PASSWORD', 'autoexpress');
 }
 
 $dbConnection = array('dbdriver'    => ENGINE,

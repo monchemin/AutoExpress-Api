@@ -21,8 +21,9 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
 
 //echo QueryBuilder::getInternalRoutes(1, 2, null, null, 5, 9);
 
-if($requestData !== null)
-{
+//if($requestData !== null)
+//{
+    $requestData = $requestData !== null ? $requestData : new \stdClass;
     $fromStation = property_exists($requestData, "fromStation") ? $requestData->fromStation : 0;
     $toStation = property_exists($requestData, "toStation") ? $requestData->toStation : 0;
     $startDate = property_exists($requestData, "startDate") ? $requestData->startDate : null;
@@ -34,7 +35,7 @@ if($requestData !== null)
     //echo $query['sql'];
     $mainResponse = array();
     $manager->getDataByQuery($query['sql'], $query['var']);
-    $mainResponse[] = $manager->managerOperationResult;
+    $mainResponse['maindata'] = $manager->managerOperationResult;
     $fzquery = QueryBuilder::getZone($fromStation);
     $manager->getDataByQuery($fzquery['sql'], $fzquery['var']);
     $fzPK = $manager->managerOperationResult->response != null ? $manager->managerOperationResult->response[0]["PK"] : 0;
@@ -44,11 +45,11 @@ if($requestData !== null)
     if($fzPK != 0 && $tzPK != 0) {
         $zoneQuery = QueryBuilder::getInternalRoutesByZone($fzPK, $tzPK, $startDate, $endDate, $fromHour, $toHour);
         $manager->getDataByQuery($zoneQuery['sql'], $zoneQuery['var']);
-        $mainResponse[] = $manager->managerOperationResult;
+        $mainResponse['zonedata'] = $manager->managerOperationResult;
     }
 
     echo json_encode($mainResponse);
-}
+//}
  function getHourDisplayOrder($fromHour, $manager) {
      $manager->getData(PickupHours::class, array("displayOrder"), array("hour"=>$fromHour));
      $result = $manager->managerOperationResult;

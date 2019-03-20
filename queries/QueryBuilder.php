@@ -103,4 +103,12 @@ final class QueryBuilder
         WHERE route.routeDate >= NOW()";
     }
 
+    public static function getRouteStation() {
+        return "select station.PK, concat(city.cityName, ' ', zone.zoneName, ' ', station.stationName) as stationName, station.stationAddress
+        from station
+        inner join zone on station.FK_Zone = zone.PK
+        inner join city on zone.FK_City = city.PK
+        ";
+    }
+
 }
