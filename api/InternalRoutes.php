@@ -19,8 +19,8 @@ $httpMethod = $_SERVER['REQUEST_METHOD'];
 $requestData = json_decode(file_get_contents("php://input"));
 $uri = explode('/', $_SERVER['REQUEST_URI']);
 
-//echo QueryBuilder::getInternalRoutes(1, 2, null, null, 5, 9);
-
+//echo QueryBuilder::getInternalRoutes(1, 2, null, null, 5, 9);echo 
+//echo date('Y-m-d');
 //if($requestData !== null)
 //{
     $requestData = $requestData !== null ? $requestData : new \stdClass;
@@ -30,7 +30,7 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
     $endDate = property_exists($requestData, "endDate") ? $requestData->endDate : null;
     $fromHour = property_exists($requestData, "fromHour") ? $requestData->fromHour : 0;
     $toHour = property_exists($requestData, "toHour") ?  $requestData->toHour : 0;
-
+    //echo "startdata".$startDate;
     $query = QueryBuilder::getInternalRoutes($fromStation, $toStation, $startDate, $endDate, $fromHour, $toHour);
     //echo $query['sql'];
     $mainResponse = array();

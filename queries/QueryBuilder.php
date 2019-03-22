@@ -17,6 +17,7 @@ final class QueryBuilder
         $whereClause = array();
         $sqlVar = array();
         $between = false;
+        $beginWhere = "";
 
         if(!empty($fromStation)) {
             $whereClause[] = "fromStation.PK = :fromStation";
@@ -27,8 +28,11 @@ final class QueryBuilder
             $sqlVar[":toStation"] = $toStation;
         }
         if($startDate != null) {
-            $whereClause[] = "route.routeDate = :startDate";
+            $beginWhere = " WHERE route.routeDate = :startDate ";
             $sqlVar[":startDate"] = $startDate;
+        }else {
+            $beginWhere = " WHERE route.routeDate >= :startDate ";
+            $sqlVar[":startDate"] = date('Y-m-d'); 
         }
         if(!empty($fromHour) && !empty($toHour)){
             $sqlVar[":fromHour"] = $fromHour;
@@ -39,7 +43,7 @@ final class QueryBuilder
             $sqlVar[":fromHour"] = $fromHour;
         }
 
-      $statement = self::commonQuery();
+      $statement = self::commonQuery().$beginWhere;
         if(!empty($whereClause) ) $statement .= " AND " . implode(" AND " , $whereClause);
         if($between) $statement .= " AND pickuphour.displayOrder BETWEEN :fromHour AND :toHour";
 
@@ -60,6 +64,7 @@ final class QueryBuilder
         $whereClause = array();
         $sqlVar = array();
         $between = false;
+        $beginWhere = "";
 
         if(!empty($fromZone)) {
             $whereClause[] = "fromZone.PK = :fromZone";
@@ -70,8 +75,11 @@ final class QueryBuilder
             $sqlVar[":toZone"] = $toZone;
         }
         if($startDate != null) {
-            $whereClause[] = "route.routeDate = :startDate";
+            $beginWhere = " WHERE route.routeDate = :startDate ";
             $sqlVar[":startDate"] = $startDate;
+        }else {
+            $beginWhere = " WHERE route.routeDate >= :startDate ";
+            $sqlVar[":startDate"] = date('Y-m-d'); 
         }
         if(!empty($fromHour) && !empty($toHour)){
             $sqlVar[":fromHour"] = $fromHour;
@@ -82,7 +90,7 @@ final class QueryBuilder
             $sqlVar[":fromHour"] = $fromHour;
         }
 
-        $statement = self::commonQuery();
+        $statement = self::commonQuery().$beginWhere;
         if(!empty($whereClause) ) $statement .= " AND " . implode(" AND " , $whereClause);
         if($between) $statement .= " AND pickuphour.displayOrder BETWEEN :fromHour AND :toHour";
 
@@ -100,7 +108,7 @@ final class QueryBuilder
         INNER JOIN zone toZone ON toZone.PK = toStation.FK_Zone
         LEFT JOIN reservation ON route.PK = reservation.FK_Route
         INNER JOIN pickuphour ON route.FK_Hour = pickuphour.PK
-        WHERE route.routeDate >= NOW()";
+       ";
     }
 
     public static function getRouteStation() {
