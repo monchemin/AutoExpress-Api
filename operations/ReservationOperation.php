@@ -4,6 +4,7 @@ namespace Operations;
 use Entities\Customers;
 use Entities\Reservations;
 use FactorOperations\FactorManager;
+use Queries\QueryBuilder;
 
 
 class ReservationOperation extends OperationBase {
@@ -32,15 +33,30 @@ class ReservationOperation extends OperationBase {
             $reservation->FK_Customer = property_exists($this->requestData, "FK_Customer") ? $this->requestData->FK_Customer : null;
             $reservation->FK_Route = property_exists($this->requestData, "FK_Route") ? $this->requestData->FK_Route : null;
             $reservation->place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
-            $this->manager->insertData($reservation);
-            if($this->manager->managerOperationResult->status == 200) {
-                $this->readOne($reservation->PK);
-            $this->operationStatus = true;
+            if ($this.shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
+            {
+                $this->manager->insertData($reservation);
+                if($this->manager->managerOperationResult->status == 200) 
+                {
+                    $this->readOne($reservation->PK);
+                    $this->operationStatus = true;
+                }
             }
+            
             
         }
     }
+    function shouldMakeReservation($pk, $place, $customer) {
+        $ok = false;
+        $placeQuery = QueryBuilder::getRoutePlace();
+        $this->manager->getDataByQuery($placeQuery, array(":pk"=>$pk));
+        if($this->manager->managerOperationResult->status == 200) {
+           $rplace = $manager->managerOperationResult->response['place'];
+           if ($place <= $rplace) {$ok = true; }
+        }
+        return $ok && $this.customerExists($customer);
 
+    }
     protected function update()
     {
         if( $this->requestData != null && property_exists($this->requestData, "PK")) {
@@ -70,10 +86,10 @@ class ReservationOperation extends OperationBase {
             $this->operationStatus = true;
         }
     }
-    private function customerExists()
+    private function customerExists($customer)
     {
         $exists = false;
-        $this->manager->getData(Customers::class, array(), array("PK" => $this->requestData->PK));
+        $this->manager->getData(Customers::class, array(), array("PK" => $customer));
         $loginResult = $this->manager->managerOperationResult;
         if($loginResult->status == 200 && $loginResult->resultData != null) $exists = true;
         return $exists;

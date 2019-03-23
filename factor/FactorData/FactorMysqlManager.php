@@ -39,9 +39,11 @@ final class FactorMysqlManager implements IFactorDbManager {
                 
                 if( $pdoQuery->rowCount() && $lastInsert ){ 
                     //return result as array
+                    $this->operationResult->status = self::STATUS_OK;
                     return  $this->pdo->lastInsertId();
                 }
                 else {
+                    $this->operationResult->status = self::STATUS_OK;
                     return true;
                 }
 
