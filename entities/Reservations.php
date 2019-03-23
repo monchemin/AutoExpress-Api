@@ -26,6 +26,11 @@ class Reservations {
      */
     public $FK_Customer;
 
+     /**
+     * @ORM\TableColumn(columnName="place")
+     */
+    public $place;
+
 
 }
 ?>
