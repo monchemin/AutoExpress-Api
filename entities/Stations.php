@@ -25,5 +25,10 @@ class Stations {
      */
     public $FK_Zone;
 
+    /**
+     * @ORM\TableColumn(columnName="stationDetail")
+     */
+    public $stationDetail;
+
 }
 ?>

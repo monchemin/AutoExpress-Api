@@ -28,6 +28,7 @@ class stationOperation extends OperationBase {
             $station = new Stations();
             $station->stationName = $this->requestData->stationName;
             $station->stationAddress = property_exists($this->requestData, "stationAddress") ? $this->requestData->stationAddress : null;
+            $station->stationDetail = property_exists($this->requestData, "stationDetail") ? $this->requestData->stationDetail : null;
             $station->FK_Zone = property_exists($this->requestData, "FK_Zone") ? $this->requestData->FK_Zone : null;
             $this->manager->insertData($station);
             $this->operationStatus = true;
@@ -41,6 +42,7 @@ class stationOperation extends OperationBase {
             $station->PK = $this->requestData->PK;
             if (property_exists($this->requestData, "stationName")) $station->stationName = $this->requestData->stationName;
             if (property_exists($this->requestData, "stationAddress")) $station->stationAddress = $this->requestData->stationAddress;
+            if (property_exists($this->requestData, "stationDetail")) $station->stationDetail = $this->requestData->stationDetail;
             if (property_exists($this->requestData, "FK_Zone")) $station->FK_Zone = $this->requestData->FK_Zone;
             $this->manager->changeData($station);
             $this->readOne($station->PK);

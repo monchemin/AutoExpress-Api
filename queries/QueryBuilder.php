@@ -98,9 +98,9 @@ final class QueryBuilder
         return array("sql" => $statement, "var" => $sqlVar);
     }
 
-    private static function commonQuery() {
+    public static function commonQuery() {
         return "SELECT route.PK, route.routeDate, route.routePrice, route.routePlace - count(reservation.PK) as remaningPlace, pickuphour.hour,
-                    fromStation.stationName as fStation, fromZone.zoneName as fZone, toStation.stationName as tStation, toZone.zoneName as tZone
+                    fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone
         FROM route
         INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK
         INNER JOIN station toStation ON route.FK_ArrivalStage = toStation.PK
