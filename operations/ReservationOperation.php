@@ -39,6 +39,7 @@ class ReservationOperation extends OperationBase {
                 if($this->manager->managerOperationResult->status == 200) 
                 {
                     $this->readOne($reservation->PK);
+                    echo $reservation->PK; 
                     $this->operationStatus = true;
                 }
             }
@@ -51,7 +52,7 @@ class ReservationOperation extends OperationBase {
         $placeQuery = QueryBuilder::getRoutePlace();
         $this->manager->getDataByQuery($placeQuery, array(":pk"=>$pk));
         if($this->manager->managerOperationResult->status == 200) {
-           $rplace = $manager->managerOperationResult->response['place'];
+           $rplace = $this->manager->managerOperationResult->response['place'];
            if ($place <= $rplace) {$ok = true; }
         }
         return $ok && $this.customerExists($customer);

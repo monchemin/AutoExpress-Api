@@ -23,7 +23,7 @@ steps:
     password: gwzz@4520-LL
     rootDirectory: $(Build.SourcesDirectory)
     filePatterns: '**' 
-    remoteDirectory: '/SubDomains/api' 
+    remoteDirectory: '/SubDomains/autoexpress' 
     clean: false 
     cleanContents: false
     overwrite: true 
