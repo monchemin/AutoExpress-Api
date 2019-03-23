@@ -1,0 +1,31 @@
+# PHP
+# Test and package your PHP project.
+# Add steps that run tests, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/php
+
+trigger:
+- master
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  phpVersion: 7.2
+
+steps:
+# FTP Upload
+- task: FtpUpload@1
+  inputs:
+    credentialsOption: inputs
+    #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
+    serverUrl: ftp://gabways.com
+    username: gabways.com
+    password: gwzz@4520-LL
+    rootDirectory: $(Build.SourcesDirectory)
+    filePatterns: '**' 
+    remoteDirectory: '/SubDomains/api' 
+    clean: false 
+    cleanContents: false
+    overwrite: true 
+    preservePaths: true 
+    trustSSL: true
