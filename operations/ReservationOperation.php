@@ -25,8 +25,9 @@ class ReservationOperation extends OperationBase {
 
     protected function create()
     {
-
-        if($this->requestData != null ) {
+       
+        if($this->requestData !== null ) {
+           
             $reservation = new Reservations();
             $reservation->PK = date('Y').$this->requestData->FK_Route.$this->requestData->FK_Customer;
             $reservation->reservationDate = date("Y-m-d H:i:s"); //property_exists($this->requestData, "reservationDate") ? $this->requestData->reservationDate : null;
@@ -35,9 +36,11 @@ class ReservationOperation extends OperationBase {
             $reservation->place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
             if ($this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
             {
+                
                 $this->manager->insertData($reservation);
                 if($this->manager->managerOperationResult->status == 200) 
                 {
+                   
                     $this->readOne($reservation->PK);
                      
                     $this->operationStatus = true;
