@@ -33,13 +33,13 @@ class ReservationOperation extends OperationBase {
             $reservation->FK_Customer = property_exists($this->requestData, "FK_Customer") ? $this->requestData->FK_Customer : null;
             $reservation->FK_Route = property_exists($this->requestData, "FK_Route") ? $this->requestData->FK_Route : null;
             $reservation->place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
-            if ($this.shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
+            if ($this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
             {
                 $this->manager->insertData($reservation);
                 if($this->manager->managerOperationResult->status == 200) 
                 {
                     $this->readOne($reservation->PK);
-                    echo $reservation->PK; 
+                     
                     $this->operationStatus = true;
                 }
             }
@@ -47,15 +47,18 @@ class ReservationOperation extends OperationBase {
             
         }
     }
-    function shouldMakeReservation($pk, $place, $customer) {
+    public function shouldMakeReservation($pk, $place, $customer) {
         $ok = false;
         $placeQuery = QueryBuilder::getRoutePlace();
+        //echo $placeQuery;
+        //echo $pk;
         $this->manager->getDataByQuery($placeQuery, array(":pk"=>$pk));
         if($this->manager->managerOperationResult->status == 200) {
-           $rplace = $this->manager->managerOperationResult->response['place'];
+            //print_r($this->manager->managerOperationResult);
+           $rplace = $this->manager->managerOperationResult->response[0]['place'];
            if ($place <= $rplace) {$ok = true; }
         }
-        return $ok && $this.customerExists($customer);
+        return $ok && $this->customerExists($customer);
 
     }
     protected function update()
@@ -92,7 +95,7 @@ class ReservationOperation extends OperationBase {
         $exists = false;
         $this->manager->getData(Customers::class, array(), array("PK" => $customer));
         $loginResult = $this->manager->managerOperationResult;
-        if($loginResult->status == 200 && $loginResult->resultData != null) $exists = true;
+        if($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;
     }
 

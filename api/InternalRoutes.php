@@ -33,6 +33,7 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
     //echo "startdata".$startDate;
     $query = QueryBuilder::getInternalRoutes($fromStation, $toStation, $startDate, $endDate, $fromHour, $toHour);
     //echo $query['sql'];
+    //echo $query['var'];
     $mainResponse = array();
     $manager->getDataByQuery($query['sql'], $query['var']);
     $mainResponse['maindata'] = $manager->managerOperationResult;

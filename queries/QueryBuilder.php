@@ -99,7 +99,7 @@ final class QueryBuilder
     }
 
     public static function commonQuery() {
-        return "SELECT route.PK, route.routeDate, route.routePrice, route.routePlace - sum(reservation.place) as remaningPlace, pickuphour.hour,
+        return "SELECT route.PK, route.routeDate, route.routePrice, (route.routePlace - coalesce(sum(reservation.place),0)) as remaningPlace, pickuphour.hour,
                     fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone
         FROM route
         INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK
@@ -120,9 +120,9 @@ final class QueryBuilder
     }
 
     public static function getRoutePlace() {
-        return "SELECT  route.routePlace - sum(reservation.place) as place
+        return "SELECT (route.routePlace - sum(coalesce(reservation.place, 0))) as place
         FROM route
-        INNER JOIN reservation ON reservation.FK_Route = route.PK
+        LEFT JOIN reservation ON reservation.FK_Route = route.PK
         WHERE route.PK = :pk
         GROUP BY route.PK
         ";   
