@@ -6,6 +6,9 @@
 trigger:
 - master
 
+variables:
+- group: testVariables
+
 pool:
   vmImage: 'Ubuntu-16.04'
 
@@ -18,12 +21,12 @@ steps:
   inputs:
     credentialsOption: inputs
     #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
-    serverUrl: ftp://gabways.com
-    username: gabways.com
-    password: gwzz@4520-LL
-    rootDirectory: $(Build.SourcesDirectory)
+     serverUrl: $(testFtpServer)
+    username: $(testFtpUser)
+    password: $(testFtpPassword)
+    rootDirectory: $(Build.SourcesDirectory)/build
     filePatterns: '**' 
-    remoteDirectory: '/SubDomains/autoexpress' 
+    remoteDirectory: $(testFtpTarget)  
     clean: false 
     cleanContents: false
     overwrite: true 
