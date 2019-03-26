@@ -21,7 +21,7 @@ steps:
     serverUrl: $(testFtpServer)
     username: $(testFtpUser)
     password: $(testFtpPassword)
-    rootDirectory: $(Build.SourcesDirectory)/build
+    rootDirectory: $(Build.SourcesDirectory)
     filePatterns: '**' 
     remoteDirectory: $(testFtpTarget)  
     clean: false 
