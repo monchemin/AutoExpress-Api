@@ -8,7 +8,6 @@ trigger:
 
 variables:
 - group: testVariables
-  phpVersion: 7.2
 
 pool:
   vmImage: 'Ubuntu-16.04'
