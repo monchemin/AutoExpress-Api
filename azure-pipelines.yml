@@ -12,14 +12,14 @@ variables:
 
 pool:
   vmImage: 'Ubuntu-16.04'
-
+  
 steps:
 # FTP Upload
 - task: FtpUpload@1
   inputs:
     credentialsOption: inputs
     #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
-     serverUrl: $(testFtpServer)
+    serverUrl: $(testFtpServer)
     username: $(testFtpUser)
     password: $(testFtpPassword)
     rootDirectory: $(Build.SourcesDirectory)/build
