@@ -23,7 +23,7 @@ steps:
     password: $(testFtpPassword)
     rootDirectory: $(Build.SourcesDirectory)
     filePatterns: '**' 
-    remoteDirectory: $(testFtpTarget)  
+    remoteDirectory: $(testApiTarget)  
     clean: false 
     cleanContents: false
     overwrite: true 
