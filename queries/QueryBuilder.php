@@ -129,7 +129,7 @@ final class QueryBuilder
     }
 
     public static function getReservation() {
-        return "SELECT reservation.PK, route.PK, route.routeDate, route.routePrice, 
+        return "SELECT reservation.PK as reservation, route.PK, route.routeDate, route.routePrice, 
         pickuphour.hour,
         fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, 
         toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone,
