@@ -40,9 +40,9 @@ class ReservationOperation extends OperationBase {
                 $this->manager->insertData($reservation);
                 if($this->manager->managerOperationResult->status == 200) 
                 {
-                   
-                    $this->readOne($reservation->PK);
-                     
+                   $query = QueryBuilder::getReservation();
+                   $this->manager->getDataByQuery($query, array(':PK'=>$reservation->PK));
+                    //$this->readOne($reservation->PK); 
                     $this->operationStatus = true;
                 }
             }
