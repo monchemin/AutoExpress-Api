@@ -13,5 +13,9 @@ namespace  api;
     header("Content-Type: application/json; charset=UTF-8");
 
 
-$manager = require_once '../boot.php';
-
+$manager = require_once 'boot.php';
+if($manager->operationResult->status === 400) {
+    http_response_code(400);
+    json_encode($manager->operationResult->erroMessage);
+}
+?>

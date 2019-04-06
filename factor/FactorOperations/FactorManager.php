@@ -15,7 +15,7 @@ final class FactorManager {
     const insert = 1;
     const update = 2;
     const delete = 3;
-    public $managerOperationResult;
+    public $operationResult;
 
     protected function __construct($arrayConfig) {
         $this->connexion = $this -> makeConnexion($arrayConfig);
@@ -23,11 +23,11 @@ final class FactorManager {
 
     }
     private function retrieveResult() {
-        $this->managerOperationResult = new ManagerOperationResult();
-        $this->managerOperationResult->status = $this->connexion->operationResult()->status;
-        $this->managerOperationResult->errorMessage = $this->connexion->operationResult()->errorMessage;
-        $this->managerOperationResult->lastIndex = $this->connexion->operationResult()->lastIndex;
-        $this->managerOperationResult->response = $this->connexion->operationResult()->resultData;
+        $this->operationResult = new ManagerOperationResult();
+        $this->operationResult->status = $this->connexion->operationResult()->status;
+        $this->operationResult->errorMessage = $this->connexion->operationResult()->errorMessage;
+        $this->operationResult->lastIndex = $this->connexion->operationResult()->lastIndex;
+        $this->operationResult->response = $this->connexion->operationResult()->resultData;
 }
     // make connection with configuration table
     protected function makeConnexion($arrayConfig) {
@@ -65,10 +65,10 @@ final class FactorManager {
         $queryAndParams = FactorUtils::makeGetDataQuery($strClassName, $fieldList, $whereArray, $orderByArray);
         $this->connexion->getData($queryAndParams['query'], $queryAndParams['sqlVars']);
         $this->retrieveResult();
-        $queryResults = $this->managerOperationResult->response;
+        $queryResults = $this->operationResult->response;
         $bind = FactorUtils::getPropertyBindColumn($strClassName);
         $resultInstance = array();
-        if($this->managerOperationResult->status == 200) {
+        if($this->operationResult->status == 200) {
             if ($queryResults !== null) {
                 foreach ($queryResults As $row) {
                     $class = new \ReflectionClass($strClassName);
@@ -80,9 +80,9 @@ final class FactorManager {
                     $resultInstance[] = $newInstance;
                 }
 
-                $this->managerOperationResult->response = $resultInstance;
+                $this->operationResult->response = $resultInstance;
             }
-            else $this->managerOperationResult->status = 110;
+            else $this->operationResult->status = 204;
 
         }
     }

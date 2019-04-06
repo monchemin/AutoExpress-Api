@@ -16,6 +16,7 @@ require_once 'ApiHeader.php';
 
 $routeOperation = new RouteOperation($manager);
 $operationResult = $routeOperation->process();
-echo json_encode($operationResult);
+http_response_code($operationResult['code']);
+echo json_encode($operationResult['data']);
 
 ?>

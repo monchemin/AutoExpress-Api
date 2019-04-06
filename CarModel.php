@@ -15,6 +15,7 @@ require_once 'ApiHeader.php';
 
 $carModelOperation = new CarModelOperation($manager);
 $operationResult = $carModelOperation->process();
+http_response_code($operationResult['code']);
 echo json_encode($operationResult);
 
 ?>

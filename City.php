@@ -8,12 +8,14 @@
 namespace api;
 
 
-use Operations\CarBrandOperation;
+
+use Operations\CityOperation;
 
 
 require_once 'ApiHeader.php';
 
-$carbrandOperation = new CarBrandOperation($manager);
-$operationResult = $carbrandOperation->process();
+$cityOperation = new CityOperation($manager);
+$operationResult = $cityOperation->process();
+http_response_code($operationResult['code']);
 echo json_encode($operationResult);
 ?>

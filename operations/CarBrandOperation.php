@@ -16,7 +16,6 @@ class CarBrandOperation extends OperationBase {
     protected function read()
     {
         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(CarBrands::class);
-        $this->operationStatus = true;
     }
 
     protected function create()
@@ -24,9 +23,9 @@ class CarBrandOperation extends OperationBase {
         if($this->requestData != null && $this->requestData->brandName != null) {
             $carBrand = new Carbrands();
             $carBrand->brandName = $this->requestData->brandName;
-            $this->manager->insertData($carBrand);
-            $this->operationStatus = true;
+            $this->manager->insertData($carBrand);    
         }
+        else {$this->operationStatus = 400;}
     }
 
     protected function update()
@@ -37,8 +36,7 @@ class CarBrandOperation extends OperationBase {
             if (property_exists($this->requestData, "PK") )$carBrand->brandName = $this->requestData->brandName;
             $this->manager->changeData($carBrand);
             $this->readOne($carBrand->PK);
-            $this->operationStatus = true;
-        }
+        } else {$this->operationStatus = 400;}
 
     }
     protected function readOne($pk) {
@@ -55,7 +53,7 @@ class CarBrandOperation extends OperationBase {
         $carBrand->PK = $this->pk;
         $this->manager->deleteData($carBrand);
         $this->operationStatus = true;
-        }
+        }else {$this->operationStatus = 400;}
     }
 
     public function process()

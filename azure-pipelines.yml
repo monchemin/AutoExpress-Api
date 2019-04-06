@@ -18,12 +18,12 @@ steps:
   inputs:
     credentialsOption: inputs
     #serverEndpoint: # Required when credentialsOption == ServiceEndpoint
-    serverUrl: $(testFtpServer)
-    username: $(testFtpUser)
-    password: $(testFtpPassword)
+    serverUrl: $(server)
+    username: $(username)
+    password: $(secret)
     rootDirectory: $(Build.SourcesDirectory)
     filePatterns: '**' 
-    remoteDirectory: $(testApiTarget)  
+    remoteDirectory: $(api)  
     clean: false 
     cleanContents: false
     overwrite: true 

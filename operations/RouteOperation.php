@@ -20,13 +20,14 @@ class RouteOperation extends OperationBase {
     {
 
          ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Routes::class);
-        $this->operationStatus = true;
     }
 
     protected function create()
     {
 
-        if($this->requestData != null && property_exists($this->requestData, "FK_Driver") && $this->customerExists()) {
+        if($this->requestData != null && property_exists($this->requestData, "FK_Driver")){
+
+        if( $this->customerExists()) {
             $route = new Routes();
             //$route->PK = $this->requestData->PK;
             $route->routeDate = property_exists($this->requestData, "routeDate") ? $this->requestData->routeDate : null;
@@ -37,8 +38,9 @@ class RouteOperation extends OperationBase {
             $route->FK_DepartureStage = property_exists($this->requestData, "FK_DepartureStage") ? $this->requestData->FK_DepartureStage : null;
             $route->FK_ArrivalStage = property_exists($this->requestData, "FK_ArrivalStage") ? $this->requestData->FK_ArrivalStage : null;
             $this->manager->insertData($route);
-            $this->operationStatus = true;
-        }
+        } else {$this->operationStatus = 403;}
+    } else {$this->operationStatus = 400;}
+
     }
 
     protected function update()
@@ -55,8 +57,8 @@ class RouteOperation extends OperationBase {
             if (property_exists($this->requestData, "FK_ArrivalStage")) $route->FK_ArrivalStage = $this->requestData->FK_ArrivalStage;
             $this->manager->changeData($route);
             $this->readOne($route->PK);
-            $this->operationStatus = true;
-        }
+            $this->operationStatus = 200;
+        } else { $this->operationStatus = 400;}
 
     }
     protected function readOne($pk) {
@@ -71,14 +73,13 @@ class RouteOperation extends OperationBase {
 
             $route->PK = $this->pk;
             $this->manager->deleteData($route);
-            $this->operationStatus = true;
-        }
+        } else {$this->operationStatus = 400;}
     }
     private function customerExists()
     {
         $exists = false;
         $this->manager->getData(Drivers::class, array(), array("PK" => $this->requestData->FK_Driver));
-        $loginResult = $this->manager->managerOperationResult;
+        $loginResult = $this->manager->operationResult;
         if($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;
     }
@@ -105,9 +106,6 @@ class RouteOperation extends OperationBase {
         return $this->operationResult();
 
     }
-    protected function operationResult()
-    {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
-    }
+   
 }
 ?>

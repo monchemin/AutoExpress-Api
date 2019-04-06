@@ -10,7 +10,7 @@ final class FactorMysqlManager implements IFactorDbManager {
     protected $pdo;
     protected $operationResult;
      CONST STATUS_OK = 200;
-     CONST STATUS_ERROR = 100;
+     CONST STATUS_ERROR = 400;
 
     protected function __construct($arrayConfig) {
        $this->operationResult = new DataOperationResult();

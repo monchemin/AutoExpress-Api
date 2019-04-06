@@ -54,7 +54,7 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
  function getHourDisplayOrder($fromHour, $manager) {
      $manager->getData(PickupHours::class, array("displayOrder"), array("hour"=>$fromHour));
      $result = $manager->managerOperationResult;
-     print_r($result);
+    
  }
 
 ?>
