@@ -1,9 +1,9 @@
 <?php
 function loadClass($className) {
-
     $fileArray = explode(DIRECTORY_SEPARATOR, $className);
     $searchFile = $fileArray[count($fileArray)-1].".php";
     if( fileSearch(getcwd(), $searchFile) == null)  fileSearch(dirname(getcwd()), $searchFile);
+    
 
 }
 
@@ -12,7 +12,7 @@ function fileSearch($dirName, $searchFile) {
    // echo $dirName." ".is_dir($dirName);
     $trouve = "";
    foreach(scandir($dirName) as $key => $dirElement) {
-    $path =  realpath($dirName.DIRECTORY_SEPARATOR.$dirElement);
+    $path =  @realpath($dirName.DIRECTORY_SEPARATOR.$dirElement);
    // echo $path. "<br />";
        if( !is_dir($path) ) {
           //echo "isfile : ".$dirElement." || ";

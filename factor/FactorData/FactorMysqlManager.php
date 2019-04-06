@@ -3,6 +3,8 @@ namespace FactorData;
 
 /*
 */
+require_once 'IFactorDbManager.php';
+require_once 'DataOperationResult.php';
 use PDO;
 final class FactorMysqlManager implements IFactorDbManager {
 
@@ -11,6 +13,7 @@ final class FactorMysqlManager implements IFactorDbManager {
     protected $operationResult;
      CONST STATUS_OK = 200;
      CONST STATUS_ERROR = 400;
+     CONST NO_DATA = 204;
 
     protected function __construct($arrayConfig) {
        $this->operationResult = new DataOperationResult();
@@ -57,12 +60,15 @@ final class FactorMysqlManager implements IFactorDbManager {
         $pdoQuery = $this->pdo->prepare($queryString);
         try {
                 $pdoQuery->execute($pamarsArray);
-                $this->operationResult->status = self::STATUS_OK;
-                if( $pdoQuery->rowCount() ){
-                    $this->operationResult->resultData =  $pdoQuery->fetchAll(PDO::FETCH_ASSOC);
+                $result =  $pdoQuery->fetchAll(PDO::FETCH_ASSOC);
+                if(!empty($result) ){
+                    $this->operationResult->resultData =  $result;
+                    $this->operationResult->status = self::STATUS_OK;
                 }
                 else {
+                    echo "mysqlllll";
                     $this->operationResult->resultData = array();
+                    $this->operationResult->status = self::NO_DATA;
                 }
             $pdoQuery->closeCursor();
         } catch(\PDOException $pdoError ) {

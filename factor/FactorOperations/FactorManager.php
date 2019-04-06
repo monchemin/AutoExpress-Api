@@ -7,6 +7,7 @@ namespace FactorOperations;
 *   @author : NK
 *
 */
+require_once 'ManagerOperationResult.php';
 use FactorData\FactorMysqlManager;
 
 final class FactorManager {
@@ -62,12 +63,15 @@ final class FactorManager {
    
     // get records by criteria
     public function getData($strClassName, $fieldList=array(), $whereArray=array(), $orderByArray=array()) {
+        //print_r($whereArray);
         $queryAndParams = FactorUtils::makeGetDataQuery($strClassName, $fieldList, $whereArray, $orderByArray);
+        //echo $queryAndParams['query'];
         $this->connexion->getData($queryAndParams['query'], $queryAndParams['sqlVars']);
         $this->retrieveResult();
         $queryResults = $this->operationResult->response;
         $bind = FactorUtils::getPropertyBindColumn($strClassName);
         $resultInstance = array();
+        echo "code avant: ".$this->operationResult->status;
         if($this->operationResult->status == 200) {
             if ($queryResults !== null) {
                 foreach ($queryResults As $row) {
@@ -82,9 +86,10 @@ final class FactorManager {
 
                 $this->operationResult->response = $resultInstance;
             }
-            else $this->operationResult->status = 204;
+            else $this->operationResult->status = 400;
 
         }
+        echo "code factor: ".$this->operationResult->status;
     }
 
 /**

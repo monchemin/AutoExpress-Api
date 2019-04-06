@@ -3,6 +3,13 @@
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'autoload.php']);
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'vendor', 'autoload.php']);
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorAnnotations.php']);
+require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorManager.php']);
+require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorUtils.php']);
+require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorData', 'FactorMysqlManager.php']);
+require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorData', 'IFactorDbManager.php']);
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'OperationBase.php']);
+
+
 
 //echo join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorAnnotations.php']);
 //use Factor\FactorOperations\FactorManager;

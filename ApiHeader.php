@@ -12,7 +12,6 @@ namespace  api;
     header("Access-Control-Allow-Headers: *");
     header("Content-Type: application/json; charset=UTF-8");
 
-
 $manager = require_once 'boot.php';
 if($manager->operationResult->status === 400) {
     http_response_code(400);

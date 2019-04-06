@@ -3,10 +3,12 @@
  * class of generic functions
  */
 namespace FactorOperations;
+error_reporting(E_ERROR | E_PARSE);
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use FactorAnnotations\TableColumn;
 use FactorAnnotations\TableName;
+use Entities;
 
 
 
@@ -16,7 +18,7 @@ class FactorUtils {
      @ return insert query
      */
     public static function makeInsertQuery($insertObject) {
-
+        self::loadFile($strClassName);
         $classProperties = get_class_vars(get_class($insertObject));
         $tableName = self::getTableName(get_class($insertObject)); 
         $queryValues = array(); //query values as pdo statement (:columnName)
@@ -48,6 +50,7 @@ class FactorUtils {
      * @return : query string
      */
     public static function makeUpdateQuery($updateObject, $filters=null) {
+        self::loadFile(get_class($updateObject));
         $classProperties = get_class_vars(get_class($updateObject));
         
         $tableName = self::getTableName(get_class($updateObject));
@@ -118,14 +121,13 @@ class FactorUtils {
 
 
     public static function makeGetDataQuery($strClassName, $fieldList, $whereArray, $orderByArray) {
-
+        self::loadFile($strClassName);
         $filters = array();
         $whereClause = array();
         $orderBy = array();
         $queryValues = array();
         $classProperties = get_class_vars($strClassName);
-
-        foreach($classProperties as $property => $value) {
+        foreach($classProperties as $property=> $value) {
             $tableColumn = self::getTableColumn($strClassName, $property) !==null ? self::getTableColumn($strClassName, $property) : $property;
             if( in_array($property, $fieldList) ) $filters[] = $tableColumn;
             if( in_array($property, $orderByArray) ) $orderBy[] = $tableColumn;
@@ -149,9 +151,9 @@ class FactorUtils {
 
     
 
-    protected static function getTableName($srtClassName) {
-
-        $reflectedClass = new \ReflectionClass($srtClassName);
+    protected static function getTableName($strClassName) {
+        self::loadFile($strClassName);
+        $reflectedClass = new \ReflectionClass($strClassName);
         $classAnnotations = self::reader()->getClassAnnotations($reflectedClass);
         return $classAnnotations[0]->value;
     } 
@@ -173,7 +175,7 @@ class FactorUtils {
     }
 
     public static function getPropertyBindColumn($strClassName) {
-
+        self::loadFile($strClassName);
         $classProperties = get_class_vars($strClassName);
         $bindArray = array();
         foreach($classProperties as $property => $value) {
@@ -182,6 +184,11 @@ class FactorUtils {
         }
         return $bindArray;
 
+    }
+    private static function loadFile($className) {
+        $fileArray = explode("\\", $className);
+        $searchFile = $fileArray[count($fileArray)-1].".php";
+        require_once join(DIRECTORY_SEPARATOR, ['entities', $searchFile]);
     }
 }
 ?>
