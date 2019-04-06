@@ -71,7 +71,6 @@ final class FactorManager {
         $queryResults = $this->operationResult->response;
         $bind = FactorUtils::getPropertyBindColumn($strClassName);
         $resultInstance = array();
-        echo "code avant: ".$this->operationResult->status;
         if($this->operationResult->status == 200) {
             if ($queryResults !== null) {
                 foreach ($queryResults As $row) {
@@ -86,10 +85,10 @@ final class FactorManager {
 
                 $this->operationResult->response = $resultInstance;
             }
-            else $this->operationResult->status = 400;
+            
 
         }
-        echo "code factor: ".$this->operationResult->status;
+       
     }
 
 /**

@@ -13,7 +13,7 @@ final class FactorMysqlManager implements IFactorDbManager {
     protected $operationResult;
      CONST STATUS_OK = 200;
      CONST STATUS_ERROR = 400;
-     CONST NO_DATA = 204;
+     CONST NO_DATA = 202;
 
     protected function __construct($arrayConfig) {
        $this->operationResult = new DataOperationResult();
@@ -57,8 +57,9 @@ final class FactorMysqlManager implements IFactorDbManager {
 
     public function getData($queryString, $pamarsArray=null) {
         $this->operationResult = new DataOperationResult();
-        $pdoQuery = $this->pdo->prepare($queryString);
+        
         try {
+                $pdoQuery = $this->pdo->prepare($queryString);
                 $pdoQuery->execute($pamarsArray);
                 $result =  $pdoQuery->fetchAll(PDO::FETCH_ASSOC);
                 if(!empty($result) ){
@@ -66,7 +67,6 @@ final class FactorMysqlManager implements IFactorDbManager {
                     $this->operationResult->status = self::STATUS_OK;
                 }
                 else {
-                    echo "mysqlllll";
                     $this->operationResult->resultData = array();
                     $this->operationResult->status = self::NO_DATA;
                 }
