@@ -6,6 +6,8 @@ use Entities\Reservations;
 use FactorOperations\FactorManager;
 use Queries\QueryBuilder;
 
+require_once join(DIRECTORY_SEPARATOR, ['..', 'entities', 'Reservations.php']);
+
 
 class ReservationOperation extends OperationBase {
 
@@ -38,7 +40,7 @@ class ReservationOperation extends OperationBase {
             {
                 
                 $this->manager->insertData($reservation);
-                if($this->manager->managerOperationResult->status == 200) 
+                if($this->manager->operationResult->status == 200) 
                 {
                    $query = QueryBuilder::getReservation();
                    $this->manager->getDataByQuery($query, array(':PK'=>$reservation->PK));
@@ -56,9 +58,9 @@ class ReservationOperation extends OperationBase {
         //echo $placeQuery;
         //echo $pk;
         $this->manager->getDataByQuery($placeQuery, array(":pk"=>$pk));
-        if($this->manager->managerOperationResult->status == 200) {
-            //print_r($this->manager->managerOperationResult);
-           $rplace = $this->manager->managerOperationResult->response[0]['place'];
+        if($this->manager->operationResult->status == 200) {
+            //print_r($this->manager->operationResult);
+           $rplace = $this->manager->operationResult->response[0]['place'];
            if ($place <= $rplace) {$ok = true; }
         }
         return $ok && $this->customerExists($customer);
@@ -97,7 +99,7 @@ class ReservationOperation extends OperationBase {
     {
         $exists = false;
         $this->manager->getData(Customers::class, array(), array("PK" => $customer));
-        $loginResult = $this->manager->managerOperationResult;
+        $loginResult = $this->manager->operationResult;
         if($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;
     }
@@ -126,7 +128,7 @@ class ReservationOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 }
 ?>

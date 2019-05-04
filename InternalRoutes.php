@@ -14,6 +14,7 @@ use Queries\QueryBuilder;
 
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $requestData = json_decode(file_get_contents("php://input"));
@@ -32,28 +33,30 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
     $toHour = property_exists($requestData, "toHour") ?  $requestData->toHour : 0;
     //echo "startdata".$startDate;
     $query = QueryBuilder::getInternalRoutes($fromStation, $toStation, $startDate, $endDate, $fromHour, $toHour);
-    //echo $query['sql'];
-    //echo $query['var'];
+
+   // echo $query['sql'];
+    //print_r($query['var']);
     $mainResponse = array();
     $manager->getDataByQuery($query['sql'], $query['var']);
-    $mainResponse['maindata'] = $manager->managerOperationResult;
+   // print_r($manager);
+    $mainResponse['maindata'] = $manager->operationResult;
     $fzquery = QueryBuilder::getZone($fromStation);
     $manager->getDataByQuery($fzquery['sql'], $fzquery['var']);
-    $fzPK = $manager->managerOperationResult->response != null ? $manager->managerOperationResult->response[0]["PK"] : 0;
+    $fzPK = $manager->operationResult->response != null ? $manager->operationResult->response[0]["PK"] : 0;
     $tzquery = QueryBuilder::getZone($toStation);
     $manager->getDataByQuery($tzquery['sql'], $tzquery['var']);
-    $tzPK = $manager->managerOperationResult->response != null ? $manager->managerOperationResult->response[0]["PK"] : 0;;
+    $tzPK = $manager->operationResult->response != null ? $manager->operationResult->response[0]["PK"] : 0;;
     if($fzPK != 0 && $tzPK != 0) {
         $zoneQuery = QueryBuilder::getInternalRoutesByZone($fzPK, $tzPK, $startDate, $endDate, $fromHour, $toHour);
         $manager->getDataByQuery($zoneQuery['sql'], $zoneQuery['var']);
-        $mainResponse['zonedata'] = $manager->managerOperationResult;
+        $mainResponse['zonedata'] = $manager->operationResult;
     }
 
     echo json_encode($mainResponse);
 //}
  function getHourDisplayOrder($fromHour, $manager) {
      $manager->getData(PickupHours::class, array("displayOrder"), array("hour"=>$fromHour));
-     $result = $manager->managerOperationResult;
+     $result = $manager->operationResult;
     
  }
 

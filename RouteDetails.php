@@ -14,6 +14,7 @@ use Queries\QueryBuilder;
 
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $requestData = json_decode(file_get_contents("php://input"));
@@ -28,11 +29,11 @@ $pk = intval(trim($uri[count($uri)-1],'/'));
     //echo $query['sql'];
    
 
-    echo json_encode($manager->managerOperationResult);
+    echo json_encode($manager->operationResult);
 //}
  function getHourDisplayOrder($fromHour, $manager) {
      $manager->getData(PickupHours::class, array("displayOrder"), array("hour"=>$fromHour));
-     $result = $manager->managerOperationResult;
+     $result = $manager->operationResult;
      
  }
 

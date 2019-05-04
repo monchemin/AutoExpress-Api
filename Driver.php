@@ -11,6 +11,7 @@ namespace api;
 use Operations\DriverOperation;
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'DriverOperation.php']);
 
 $driverOperation = new DriverOperation($manager);
 $operationResult = $driverOperation->process();

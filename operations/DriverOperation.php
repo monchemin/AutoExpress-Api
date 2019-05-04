@@ -74,7 +74,7 @@ class DriverOperation extends OperationBase {
     {
         $exists = false;
         $this->manager->getData(Customers::class, array(), array("PK" => $this->requestData->PK));
-        $loginResult = $this->manager->managerOperationResult;
+        $loginResult = $this->manager->operationResult;
         if($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;
     }
@@ -103,7 +103,7 @@ class DriverOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 }
 ?>

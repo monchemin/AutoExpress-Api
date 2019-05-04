@@ -11,6 +11,7 @@ namespace api;
 use Operations\ReservationOperation;
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'ReservationOperation.php']);
 
 $reservationOperation = new ReservationOperation($manager);
 $operationResult = $reservationOperation->process();

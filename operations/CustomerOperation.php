@@ -73,7 +73,7 @@ class CustomerOperation extends OperationBase {
     {
         $loginExists = false;
         $this->manager->getData(Customers::class, array(), array("customerLogin" => $this->requestData->checkLogin));
-        $loginResult = $this->manager->managerOperationResult;
+        $loginResult = $this->manager->operationResult;
         if($loginResult->status == 200 && $loginResult->response != null) $loginExists = true;
         return array("status" => $loginResult->status, "loginExists" => $loginExists);
     }
@@ -106,10 +106,10 @@ class CustomerOperation extends OperationBase {
             $this->manager->getData(Customers::class, array("PK", "customerFistName", "customerLastName"), 
                     array("customerLogin" => $this->requestData->login, "customerPassword"=>$this->requestData->password)
                 );
-            if($this->manager->managerOperationResult->status == 200 && count($this->manager->managerOperationResult->response)==1 ) {
+            if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
                 $response['status'] = 200;
                 $response['isLog'] = true;
-                $response['customerInfo'] = $this->manager->managerOperationResult->response;               
+                $response['customerInfo'] = $this->manager->operationResult->response;               
             } else {
                 $response['status'] = 200;
                 $response['isLog'] = false;
@@ -120,7 +120,7 @@ class CustomerOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 }
 ?>
