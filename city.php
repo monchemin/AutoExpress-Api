@@ -13,9 +13,10 @@ use Operations\CityOperation;
 
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'CityOperation.php']);
 
 $cityOperation = new CityOperation($manager);
 $operationResult = $cityOperation->process();
-http_response_code($operationResult['code']);
+//http_response_code($operationResult['code']);
 echo json_encode($operationResult);
 ?>

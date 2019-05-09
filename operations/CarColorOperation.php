@@ -3,6 +3,7 @@ namespace Operations;
 use Entities\CarColors;
 use FactorOperations\FactorManager;
 
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'CarColors.php']);
 
 class CarColorOperation extends OperationBase {
 
@@ -84,10 +85,9 @@ class CarColorOperation extends OperationBase {
 
     }
 
-
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 }
 ?>

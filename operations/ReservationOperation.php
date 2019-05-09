@@ -6,7 +6,8 @@ use Entities\Reservations;
 use FactorOperations\FactorManager;
 use Queries\QueryBuilder;
 
-require_once join(DIRECTORY_SEPARATOR, ['..', 'entities', 'Reservations.php']);
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'Reservations.php']);
+require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 
 
 class ReservationOperation extends OperationBase {
@@ -27,19 +28,17 @@ class ReservationOperation extends OperationBase {
 
     protected function create()
     {
-       
         if($this->requestData !== null ) {
-           
             $reservation = new Reservations();
-            $reservation->PK = date('Y').$this->requestData->FK_Route.$this->requestData->FK_Customer;
+            $reservation->PK = time() + $this->requestData->FK_Route + $this->requestData->FK_Customer;
             $reservation->reservationDate = date("Y-m-d H:i:s"); //property_exists($this->requestData, "reservationDate") ? $this->requestData->reservationDate : null;
             $reservation->FK_Customer = property_exists($this->requestData, "FK_Customer") ? $this->requestData->FK_Customer : null;
             $reservation->FK_Route = property_exists($this->requestData, "FK_Route") ? $this->requestData->FK_Route : null;
             $reservation->place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
             if ($this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
             {
-                
                 $this->manager->insertData($reservation);
+                //print_r($this->manager->operationResult);
                 if($this->manager->operationResult->status == 200) 
                 {
                    $query = QueryBuilder::getReservation();
@@ -126,8 +125,10 @@ class ReservationOperation extends OperationBase {
         return $this->operationResult();
 
     }
-    protected function operationResult()
+    public function operationResult()
     {
+        //return array("status" => "120", "errorMessage"=>"Erreur dans la data");
+
         return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 }

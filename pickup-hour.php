@@ -13,7 +13,7 @@ use Operations\ZoneOperation;
 
 
 require_once 'ApiHeader.php';
-require_once join(DIRECTORY_SEPARATOR, ['operations', 'pickuphouroperation.php']);
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'PickupHourOperation.php']);
 
 $pickupHourOperation = new PickupHourOperation($manager);
 $operationResult = $pickupHourOperation->process();

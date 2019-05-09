@@ -13,6 +13,7 @@ use Operations\ZoneOperation;
 
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'ZoneOperation.php']);
 
 $zoneOperation = new ZoneOperation($manager);
 $operationResult = $zoneOperation->process();

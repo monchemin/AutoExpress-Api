@@ -1,0 +1,3 @@
+Header unset Pragma
+Header unset Last-Modified
+Header unset Cache-Control

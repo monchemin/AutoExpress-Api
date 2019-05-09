@@ -3,7 +3,7 @@
  * class of generic functions
  */
 namespace FactorOperations;
-error_reporting(E_ERROR | E_PARSE);
+
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use FactorAnnotations\TableColumn;
@@ -18,7 +18,7 @@ class FactorUtils {
      @ return insert query
      */
     public static function makeInsertQuery($insertObject) {
-        self::loadFile($strClassName);
+       // self::loadFile($strClassName);
         $classProperties = get_class_vars(get_class($insertObject));
         $tableName = self::getTableName(get_class($insertObject)); 
         $queryValues = array(); //query values as pdo statement (:columnName)

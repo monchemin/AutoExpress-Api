@@ -11,8 +11,6 @@ namespace api;
 use Entities\PickupHours;
 use Queries\QueryBuilder;
 
-
-
 require_once 'ApiHeader.php';
 require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 

@@ -13,6 +13,7 @@ use Operations\StationOperation;
 
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'StationOperation.php']);
 
 $stationOperation = new StationOperation($manager);
 $operationResult = $stationOperation->process();

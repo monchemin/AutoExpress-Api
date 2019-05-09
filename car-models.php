@@ -12,10 +12,11 @@ use Operations\CarModelOperation;
 
 
 require_once 'ApiHeader.php';
+require_once join(DIRECTORY_SEPARATOR, ['operations', 'CarModelOperation.php']);
 
 $carModelOperation = new CarModelOperation($manager);
 $operationResult = $carModelOperation->process();
-http_response_code($operationResult['code']);
+//http_response_code($operationResult['code']);
 echo json_encode($operationResult);
 
 ?>

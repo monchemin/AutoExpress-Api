@@ -67,7 +67,7 @@ class UserOperation extends OperationBase {
     {
         $loginExists = false;
         $this->manager->getData(Users::class, array(), array("userLogin" => $this->requestData->checkLogin));
-        $loginResult = $this->manager->managerOperationResult;
+        $loginResult = $this->manager->operationResult;
         if($loginResult->status == 200 && $loginResult->response != null) $loginExists = true;
         return array("status" => $loginResult->status, "loginExists" => $loginExists);
     }
@@ -77,7 +77,7 @@ class UserOperation extends OperationBase {
             $this->manager->getData(Users::class, array(), 
                     array("userLogin" => $this->requestData->login, "userPassword"=>$this->requestData->password)
                 );
-            if($this->manager->managerOperationResult->status == 200 && count($this->manager->managerOperationResult->response)==1 ) {
+            if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
                 return array("status"=>200, "isLog"=> true);
             } else {return array("status"=>120, "isLog"=> false);}
         
@@ -108,7 +108,7 @@ class UserOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->managerOperationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 }
 ?>
