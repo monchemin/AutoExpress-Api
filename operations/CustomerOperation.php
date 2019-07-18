@@ -4,6 +4,8 @@ namespace Operations;
 use Entities\Customers;
 use FactorOperations\FactorManager;
 
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'Customers.php']);
+
 
 class CustomerOperation extends OperationBase {
 
@@ -111,8 +113,17 @@ class CustomerOperation extends OperationBase {
                 $response['isLog'] = true;
                 $response['customerInfo'] = $this->manager->operationResult->response;               
             } else {
+                $this->manager->getData(Customers::class, array("PK", "customerFistName", "customerLastName"), 
+                    array("customerEMailAddress" => $this->requestData->login, "customerPassword"=>$this->requestData->password)
+                );
+                if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
+                    $response['status'] = 200;
+                    $response['isLog'] = true;
+                    $response['customerInfo'] = $this->manager->operationResult->response; 
+                } else {
                 $response['status'] = 200;
                 $response['isLog'] = false;
+                }
             }
         
         } else { $response['status'] = 120;}
