@@ -47,7 +47,7 @@ final class QueryBuilder
         if(!empty($whereClause) ) $statement .= " AND " . implode(" AND " , $whereClause);
         if($between) $statement .= " AND pickuphour.displayOrder BETWEEN :fromHour AND :toHour";
 
-        $statement .= " GROUP BY route.PK HAVING remaningPlace > 0";
+        $statement .= " GROUP BY route.PK HAVING remainingPlace > 0";
 
         return array("sql" => $statement, "var" => $sqlVar);
     }
@@ -99,7 +99,7 @@ final class QueryBuilder
     }
 
     public static function commonQuery() {
-        return "SELECT route.PK, route.routeDate, route.routePrice, (route.routePlace - coalesce(sum(reservation.place),0)) as remaningPlace, pickuphour.hour,
+        return "SELECT route.PK, route.routeDate, route.routePrice, (route.routePlace - coalesce(sum(reservation.place),0)) as remainingPlace, pickuphour.hour,
                     fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone
         FROM route
         INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK

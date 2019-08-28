@@ -17,7 +17,7 @@ require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 $httpMethod = $_SERVER['REQUEST_METHOD'];
 $requestData = json_decode(file_get_contents("php://input"));
 $uri = explode('/', $_SERVER['REQUEST_URI']);
-
+//print_r($requestData);
 //echo QueryBuilder::getInternalRoutes(1, 2, null, null, 5, 9);echo 
 //echo date('Y-m-d');
 //if($requestData !== null)
@@ -36,8 +36,9 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
     //print_r($query['var']);
     $mainResponse = array();
     $manager->getDataByQuery($query['sql'], $query['var']);
+    echo json_encode($manager->operationResult);
    // print_r($manager);
-    $mainResponse['maindata'] = $manager->operationResult;
+  /*  $mainResponse['maindata'] = $manager->operationResult;
     $fzquery = QueryBuilder::getZone($fromStation);
     $manager->getDataByQuery($fzquery['sql'], $fzquery['var']);
     $fzPK = $manager->operationResult->response != null ? $manager->operationResult->response[0]["PK"] : 0;
@@ -50,7 +51,7 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
         $mainResponse['zonedata'] = $manager->operationResult;
     }
 
-    echo json_encode($mainResponse);
+    echo json_encode($mainResponse); */
 //}
  function getHourDisplayOrder($fromHour, $manager) {
      $manager->getData(PickupHours::class, array("displayOrder"), array("hour"=>$fromHour));

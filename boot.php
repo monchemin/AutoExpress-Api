@@ -15,22 +15,26 @@ require_once join(DIRECTORY_SEPARATOR, ['operations', 'OperationBase.php']);
 //use Factor\FactorOperations\FactorManager;
 use FactorOperations\FactorManager;
 
-DEFINE("DEV", FALSE);
+DEFINE("DEV", TRUE);
 
 if(DEV) {
     DEFINE('ENGINE', 'Mysql');
     DEFINE('HOST', 'localhost');
-    DEFINE('DBNAME', 'autoexpress');
+    DEFINE('DBNAME', 'oulift');
     DEFINE('USER', 'root');
     DEFINE('PASSWORD', '');
 }
 else
 {
     DEFINE('ENGINE', 'Mysql');
-    DEFINE('HOST', 'mysql1-p2.ezhostingserver.com'); //216.15.188.161 mysql1-p2.ezhostingserver.com
+   /* DEFINE('HOST', 'mysql1-p2.ezhostingserver.com'); //216.15.188.161 mysql1-p2.ezhostingserver.com
     DEFINE('DBNAME', 'autoexpress');
     DEFINE('USER', 'autoexpress');
-    DEFINE('PASSWORD', 'Autoexpress@123');
+    DEFINE('PASSWORD', 'Autoexpress@123'); */
+    DEFINE('HOST', '185.98.131.90'); //216.15.188.161 mysql1-p2.ezhostingserver.com
+    DEFINE('DBNAME', 'tonco1146560');
+    DEFINE('USER', 'tonco1146560');
+    DEFINE('PASSWORD', 'toncopilote');
 }
 
 $dbConnection = array('dbdriver'    => ENGINE,

@@ -32,7 +32,7 @@ class CustomerOperation extends OperationBase {
             $customer->customerLastName = property_exists($this->requestData, "customerLastName") ? $this->requestData->customerLastName : null;
             $customer->customerEMailAddress = property_exists($this->requestData, "customerEMailAddress") ? $this->requestData->customerEMailAddress : null;
             $customer->customerPhoneNumber = property_exists($this->requestData, "customerPhoneNumber") ? $this->requestData->customerPhoneNumber : null;
-            $customer->customerLogin = property_exists($this->requestData, "customerLogin") ? $this->requestData->customerLogin : null;
+            $customer->customerLogin = property_exists($this->requestData, "customerLogin") ? $this->requestData->customerLogin : $customer->customerEMailAddress;
             $customer->customerPassword = property_exists($this->requestData, "customerPassword") ? $this->requestData->customerPassword : null;
             $customer->customerDateCreate = date("Y-m-d H:i:s");
             $this->manager->insertData($customer);
@@ -105,7 +105,7 @@ class CustomerOperation extends OperationBase {
     public function login() {
         $response = array();
         if( $this->requestData != null && property_exists($this->requestData, "login")) {
-            $this->manager->getData(Customers::class, array("PK", "customerFistName", "customerLastName"), 
+            $this->manager->getData(Customers::class, array("PK", "customerFistName", "customerLastName", "customerEMailAddress"), 
                     array("customerLogin" => $this->requestData->login, "customerPassword"=>$this->requestData->password)
                 );
             if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
@@ -113,7 +113,7 @@ class CustomerOperation extends OperationBase {
                 $response['isLog'] = true;
                 $response['customerInfo'] = $this->manager->operationResult->response;               
             } else {
-                $this->manager->getData(Customers::class, array("PK", "customerFistName", "customerLastName"), 
+                $this->manager->getData(Customers::class, array("PK", "customerFistName", "customerLastName", "customerEMailAddress"), 
                     array("customerEMailAddress" => $this->requestData->login, "customerPassword"=>$this->requestData->password)
                 );
                 if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
