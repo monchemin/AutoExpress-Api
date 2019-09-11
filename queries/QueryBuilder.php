@@ -128,7 +128,7 @@ final class QueryBuilder
         ";   
     }
 
-    public static function getReservation() {
+    public static function commonReservation() {
         return "SELECT reservation.PK as reservation, route.PK, route.routeDate, route.routePrice, 
         pickuphour.hour,
         fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, 
@@ -147,8 +147,18 @@ final class QueryBuilder
             inner join customer on driver.PK = customer.PK
             inner join carcolor on driver.FK_carcolor = carcolor.PK
             inner join carmodel on driver.FK_carmodel = carmodel.PK
-            inner join carbrand on carmodel.FK_brand = carbrand.PK
-            where reservation.PK = :PK";
+            inner join carbrand on carmodel.FK_brand = carbrand.PK ";
     }
+
+    public static function getReservation() {
+            return self::commonReservation(). 
+                    "where reservation.PK = :PK";
+    }
+
+    public static function allReservations() {        
+        return self::commonReservation(). 
+                "where reservation.FK_customer = :PK 
+                AND route.routeDate >= NOW()";
+}
 
 }

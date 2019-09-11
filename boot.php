@@ -20,7 +20,7 @@ DEFINE("DEV", TRUE);
 if(DEV) {
     DEFINE('ENGINE', 'Mysql');
     DEFINE('HOST', 'localhost');
-    DEFINE('DBNAME', 'oulift');
+    DEFINE('DBNAME', 'ouilift');
     DEFINE('USER', 'root');
     DEFINE('PASSWORD', '');
 }

@@ -119,7 +119,7 @@ class CustomerOperation extends OperationBase {
                 if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
                     $response['status'] = 200;
                     $response['isLog'] = true;
-                    $response['customerInfo'] = $this->manager->operationResult->response; 
+                    $response['response'] = $this->manager->operationResult->response; 
                 } else {
                 $response['status'] = 200;
                 $response['isLog'] = false;

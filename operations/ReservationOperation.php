@@ -35,15 +35,15 @@ class ReservationOperation extends OperationBase {
             $reservation->FK_Customer = property_exists($this->requestData, "FK_Customer") ? $this->requestData->FK_Customer : null;
             $reservation->FK_Route = property_exists($this->requestData, "FK_Route") ? $this->requestData->FK_Route : null;
             $reservation->place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
-            if ($this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
+            if ($this->customerExists(property_exists($this->requestData, "FK_Customer")) && $this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
             {
                 $this->manager->insertData($reservation);
-                //print_r($this->manager->operationResult);
+            
                 if($this->manager->operationResult->status == 200) 
                 {
                    $query = QueryBuilder::getReservation();
                    $this->manager->getDataByQuery($query, array(':PK'=>$reservation->PK));
-                    //$this->readOne($reservation->PK); 
+                  
                     $this->operationStatus = true;
                 }
             }
@@ -54,8 +54,7 @@ class ReservationOperation extends OperationBase {
     public function shouldMakeReservation($pk, $place, $customer) {
         $ok = false;
         $placeQuery = QueryBuilder::getRoutePlace();
-        //echo $placeQuery;
-        //echo $pk;
+       
         $this->manager->getDataByQuery($placeQuery, array(":pk"=>$pk));
         if($this->manager->operationResult->status == 200) {
             //print_r($this->manager->operationResult);
@@ -80,7 +79,9 @@ class ReservationOperation extends OperationBase {
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(Reservations::class, array(), array("PK" => $pk));
+         //$this->manager->getData(Reservations::class, array(), array("PK" => $pk));
+         $query = QueryBuilder::getReservation();
+         $this->manager->getDataByQuery($query, array(':PK'=>$pk));
     }
 
     protected function delete()
