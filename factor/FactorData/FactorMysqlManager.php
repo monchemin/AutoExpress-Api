@@ -21,13 +21,15 @@ final class FactorMysqlManager implements IFactorDbManager {
             $this->pdo =  new PDO('mysql:host='. $arrayConfig['host'] . ';dbname='. $arrayConfig['dbname'] .';charset=utf8', 
                                     $arrayConfig['user'], 
                                     $arrayConfig['password'], 
-                                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                                    PDO::ATTR_PERSISTENT => true)
                                 );
             $this->operationResult->status = self::STATUS_OK;
                                 
         } catch( \Exception $pdoError)
         {
             $this->operationResult->errorMessage = $pdoError->getMessage();
+            print($pdoError->getMessage());
             $this->operationResult->status = self::STATUS_ERROR;
         }   
 

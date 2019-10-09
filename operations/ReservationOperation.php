@@ -121,7 +121,7 @@ class ReservationOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+               
         }
         return $this->operationResult();
 

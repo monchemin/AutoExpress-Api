@@ -15,7 +15,7 @@ require_once join(DIRECTORY_SEPARATOR, ['operations', 'OperationBase.php']);
 //use Factor\FactorOperations\FactorManager;
 use FactorOperations\FactorManager;
 
-DEFINE("DEV", TRUE);
+DEFINE("DEV", FALSE);
 
 if(DEV) {
     DEFINE('ENGINE', 'Mysql');

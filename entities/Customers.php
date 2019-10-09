@@ -11,36 +11,36 @@ class Customers {
      */
     public $PK;
     /**
-     * @ORM\TableColumn(columnName="customerFistName")
+     * @ORM\TableColumn(columnName="firstName")
      */
-    public $customerFistName;
+    public $firstName;
 
     /**
-     * @ORM\TableColumn(columnName="customerLastName")
+     * @ORM\TableColumn(columnName="lastName")
      */
-    public $customerLastName;
+    public $lastName;
     /**
-     * @ORM\TableColumn(columnName="customerPhoneNumber")
+     * @ORM\TableColumn(columnName="phoneNumber")
      */
-    public $customerPhoneNumber;
+    public $phoneNumber;
 
     /**
-     * @ORM\TableColumn(columnName="customerEMailAddress")
+     * @ORM\TableColumn(columnName="eMail")
      */
-    public $customerEMailAddress;
+    public $eMail;
     /**
-     * @ORM\TableColumn(columnName="customerLogin")
+     * @ORM\TableColumn(columnName="password")
      */
-    public $customerLogin;
+    public $password;
 
     /**
-     * @ORM\TableColumn(columnName="customerPassword")
+     * @ORM\TableColumn(columnName="createdAt")
      */
-    public $customerPassword;
+    public $createdAt;
     /**
-     * @ORM\TableColumn(columnName="customerDateCreate")
+     * @ORM\TableColumn(columnName="drivingNumber")
      */
-    public $customerDateCreate;
+    public $drivingNumber;
 
 }
 ?>

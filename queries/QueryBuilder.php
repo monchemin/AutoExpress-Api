@@ -129,7 +129,7 @@ final class QueryBuilder
     }
 
     public static function commonReservation() {
-        return "SELECT reservation.PK as reservation, route.PK, route.routeDate, route.routePrice, 
+        return "SELECT reservation.PK as reservation, reservation.place as remainingPlace, route.PK, route.routeDate, route.routePrice, 
         pickuphour.hour,
         fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, 
         toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone,
@@ -160,5 +160,7 @@ final class QueryBuilder
                 "where reservation.FK_customer = :PK 
                 AND route.routeDate >= NOW()";
 }
+
+
 
 }
