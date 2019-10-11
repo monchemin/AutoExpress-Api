@@ -124,6 +124,10 @@ final class FactorManager {
         
     }
 
+    public function execute($query, $params, $lastInsert) {
+        $this->connexion->modifyData($query, $params, $lastInsert);
+        $this->retrieveResult();
+    }
 
     // fonction d'entrée pour assurer une seule instance du manager 
     public static function create($arrayConfig) {
