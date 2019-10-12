@@ -106,6 +106,7 @@ final class QueryBuilder
         INNER JOIN station toStation ON route.FK_ArrivalStage = toStation.PK
         INNER JOIN zone fromZone ON fromZone.PK = fromStation.FK_Zone
         INNER JOIN zone toZone ON toZone.PK = toStation.FK_Zone
+        INNER JOIN car ON car.PK = route.FK_car
         LEFT JOIN reservation ON route.PK = reservation.FK_Route
         INNER JOIN pickuphour ON route.FK_Hour = pickuphour.PK
        ";
@@ -133,9 +134,9 @@ final class QueryBuilder
         pickuphour.hour,
         fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, 
         toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone,
-        driver.carRegistrationNumber, driver.carYear,
+        car.registrationNumber, car.year,
         carmodel.modelName, carbrand.brandName, carcolor.colorName,
-        customer.customerFistName, customer.customerLastName
+        customer.firstName, customer.lastName
             FROM route
             inner JOIN reservation ON route.PK = reservation.FK_Route
             INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK
@@ -143,10 +144,10 @@ final class QueryBuilder
             INNER JOIN zone fromZone ON fromZone.PK = fromStation.FK_Zone
             INNER JOIN zone toZone ON toZone.PK = toStation.FK_Zone
             INNER JOIN pickuphour ON route.FK_Hour = pickuphour.PK
-            inner join driver on route.FK_Driver = driver.PK
-            inner join customer on driver.PK = customer.PK
-            inner join carcolor on driver.FK_carcolor = carcolor.PK
-            inner join carmodel on driver.FK_carmodel = carmodel.PK
+            inner join customer on route.FK_Driver = driver.PK
+            inner join car on route.FK_car = car.PK
+            inner join carcolor on car.FK_carcolor = carcolor.PK
+            inner join carmodel on car.FK_carmodel = carmodel.PK
             inner join carbrand on carmodel.FK_brand = carbrand.PK ";
     }
 

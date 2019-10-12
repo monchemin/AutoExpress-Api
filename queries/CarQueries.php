@@ -14,8 +14,8 @@ final class CarQueries {
 
 
     public static function create() {
-        return "INSERT INTO car(registrationNumber, year, FK_carmodel, FK_carcolor, FK_customer)
-                VALUES(:number, :year:, :model, :color, :customer)";
+        return "INSERT INTO car(registrationNumber, year, FK_carmodel, FK_carcolor, FK_customer, createdAt)
+                VALUES(:number, :year, :model, :color, :customer, NOW())";
     }
 
 }

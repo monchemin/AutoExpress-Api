@@ -2,6 +2,8 @@
 
 namespace Operations;
 
+use Cassandra\Date;
+use FactorData\DataOperationResult;
 use FactorOperations\FactorManager;
 use Queries\CarQueries;
 
@@ -70,8 +72,9 @@ class CarOperation extends OperationBase
         $number = $this->requestData->number;
         $PK = $this->requestData->PK;
         $model = $this->requestData->model;
-        $color = $this->requestData->year;
-        if (!is_numeric($year) || !is_numeric($PK) || empty($number) || !is_numeric($model) || !is_numeric($color)) {
+        $color = $this->requestData->color;
+
+        if (!is_numeric($year) || !is_numeric($PK) || empty($number) || !is_numeric($model) || !is_numeric($color) || getDate()['year'] < $year) {
             $this->message = "Error in provided data";
             $this->status = DATA_ERROR;
             return $this->operationResult();
@@ -81,8 +84,10 @@ class CarOperation extends OperationBase
         $this->manager->execute($query, $params, false);
         $result = $this->manager->operationResult;
         if ($result->status == 200) {
-            $this->getRegisteredCars();
+           return $this->getRegisteredCars();
         } else {
+            $this->message = $result->errorMessage;
+            $this->status = SQL_ERROR;
             return $this->operationResult();
         }
     }

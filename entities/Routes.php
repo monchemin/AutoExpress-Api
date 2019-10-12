@@ -43,5 +43,10 @@ class Routes {
      */
     public $FK_ArrivalStage;
 
+    /**
+     * @ORM\TableColumn(columnName="FK_car")
+     */
+    public $FK_car;
+
 }
 ?>

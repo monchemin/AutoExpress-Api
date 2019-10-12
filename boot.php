@@ -15,14 +15,14 @@ require_once join(DIRECTORY_SEPARATOR, ['operations', 'OperationBase.php']);
 //use Factor\FactorOperations\FactorManager;
 use FactorOperations\FactorManager;
 
-DEFINE("DEV", FALSE);
+DEFINE("DEV", $_SERVER['HTTP_HOST'] === 'localhost');
 
 if(DEV) {
     DEFINE('ENGINE', 'Mysql');
-    DEFINE('HOST', 'localhost');
-    DEFINE('DBNAME', 'ouilift');
+    DEFINE('HOST', '127.0.0.1');
+    DEFINE('DBNAME', 'oulift');
     DEFINE('USER', 'root');
-    DEFINE('PASSWORD', '');
+    DEFINE('PASSWORD', 'Geo');
 }
 else
 {
@@ -41,7 +41,8 @@ $dbConnection = array('dbdriver'    => ENGINE,
                         'host'      => HOST,
                         'dbname'    => DBNAME,
                         'user'      => USER,
-                        'password'  => PASSWORD
+                        'password'  => PASSWORD,
+                        'unix_socket' => '/tmp/mysql.sock'
                       );
 $manager = FactorManager::create($dbConnection);
 //echo json_encode($manager->managerOperationResult);
