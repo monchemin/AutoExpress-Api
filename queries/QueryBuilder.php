@@ -144,7 +144,7 @@ final class QueryBuilder
             INNER JOIN zone fromZone ON fromZone.PK = fromStation.FK_Zone
             INNER JOIN zone toZone ON toZone.PK = toStation.FK_Zone
             INNER JOIN pickuphour ON route.FK_Hour = pickuphour.PK
-            inner join customer on route.FK_Driver = driver.PK
+            inner join customer on route.FK_Driver = customer.PK
             inner join car on route.FK_car = car.PK
             inner join carcolor on car.FK_carcolor = carcolor.PK
             inner join carmodel on car.FK_carmodel = carmodel.PK

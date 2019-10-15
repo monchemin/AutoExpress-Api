@@ -27,14 +27,24 @@ class CustomerOperation extends OperationBase {
 
     protected function create()
     {
+        $firstName = property_exists($this->requestData, "firstName") ? $this->requestData->firstName : null;
+        $lastName =  property_exists($this->requestData, "lastName") ? $this->requestData->lastName : null;
+        $mail = property_exists($this->requestData, "eMail") ? $this->requestData->eMail : null;
+        $number = property_exists($this->requestData, "phoneNumber") ? $this->requestData->phoneNumber : null;
+        $pass = property_exists($this->requestData, "password") ? $this->requestData->password : null;
+
+        if($firstName == null || $lastName == null || $mail == null || $number == null || $pass == null) {
+            $this->message = "Error in provided Data";
+            $this->status = DATA_ERROR;
+        }
 
         if($this->requestData != null) {
             $customer = new Customers();
-            $customer->firstName = property_exists($this->requestData, "firstName") ? $this->requestData->firstName : null;
-            $customer->lastName = property_exists($this->requestData, "lastName") ? $this->requestData->lastName : null;
-            $customer->eMail = property_exists($this->requestData, "eMail") ? $this->requestData->eMail : null;
-            $customer->phoneNumber = property_exists($this->requestData, "phoneNumber") ? $this->requestData->phoneNumber : null;
-            $customer->password = property_exists($this->requestData, "password") ? $this->requestData->customerLogin : $customer->password;
+            $customer->firstName = $firstName;
+            $customer->lastName = $lastName;
+            $customer->eMail = $mail;
+            $customer->phoneNumber = $number;
+            $customer->password = $pass;
            // $customer->createdAt = property_exists($this->requestData, "customerPassword") ? $this->requestData->customerPassword : null;
             $customer->createdAt = date("Y-m-d H:i:s");
             $this->manager->insertData($customer);

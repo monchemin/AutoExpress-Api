@@ -35,7 +35,7 @@ class ReservationOperation extends OperationBase {
             $reservation->FK_Customer = property_exists($this->requestData, "FK_Customer") ? $this->requestData->FK_Customer : null;
             $reservation->FK_Route = property_exists($this->requestData, "FK_Route") ? $this->requestData->FK_Route : null;
             $reservation->place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
-            if ($this->customerExists(property_exists($this->requestData, "FK_Customer")) && $this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer ))
+            if ($this->shouldMakeReservation($reservation->FK_Route, $reservation->place, $reservation->FK_Customer))
             {
                 $this->manager->insertData($reservation);
             
