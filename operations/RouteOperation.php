@@ -5,12 +5,14 @@ namespace Operations;
 use Entities\Customers;
 use Entities\Routes;
 use FactorOperations\FactorManager;
+use Queries\QueryBuilder;
 use utils\DateUtils;
 
 
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'DateUtils.php']);
 require_once join(DIRECTORY_SEPARATOR, ['entities', 'Routes.php']);
+require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 
 class RouteOperation extends OperationBase
 {
@@ -70,9 +72,15 @@ class RouteOperation extends OperationBase
             $route->FK_DepartureStage = $departure;
             $route->FK_ArrivalStage = $arrival;
             $this->manager->insertData($route);
+
             $this->operationStatus = true;
+            if($this->manager->operationResult->lastIndex != null) {
+                $query = QueryBuilder::ownerRoutes();
+                $this->manager->getDataByQuery($query, array(':PK'=>$PK));
+            }
             return $this->operationResult();
         } catch (\Exception $ex) {
+            echo "catch";
             $this->message = $ex->getMessage();
             $this->status = DATA_ERROR;
             return $this->operationResult();

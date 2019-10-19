@@ -99,7 +99,7 @@ final class QueryBuilder
     }
 
     public static function commonQuery() {
-        return "SELECT route.PK, route.routeDate, route.routePrice, (route.routePlace - coalesce(sum(reservation.place),0)) as remainingPlace, pickuphour.hour,
+        return "SELECT route.PK, route.routeDate, route.routePrice, route.routePlace, (route.routePlace - coalesce(sum(reservation.place),0)) as remainingPlace, pickuphour.hour,
                     fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone
         FROM route
         INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK
@@ -162,6 +162,13 @@ final class QueryBuilder
                 AND route.routeDate >= NOW()";
 }
 
-
+    public static function ownerRoutes() {
+        return self::commonQuery().
+            " WHERE route.routeDate >= NOW()
+            AND 
+             route.FK_Driver = :PK 
+             GROUP BY route.PK
+             ORDER BY route.routeDate";
+    }
 
 }
