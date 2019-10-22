@@ -13,4 +13,15 @@ class DateUtils
         $d = DateTime::createFromFormat($format, $date);
         return $d && $d->format($format) == $date;
     }
+
+    public static function isValidDate($date) {
+            if( self::validateDate($date) ) {
+                $now = new DateTime();
+                $mDate = new DateTime($date);
+                return $now <= $mDate;
+            } else {
+                return false;
+            }
+    }
+
 }

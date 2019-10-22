@@ -42,5 +42,14 @@ class Customers {
      */
     public $drivingNumber;
 
+    /**
+     * @ORM\TableColumn(columnName="activationCode")
+     */
+    public $activationCode;
+
+    /**
+     * @ORM\TableColumn(columnName="active")
+     */
+    public $active;
 }
 ?>

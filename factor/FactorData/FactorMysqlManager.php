@@ -12,7 +12,7 @@ final class FactorMysqlManager implements IFactorDbManager {
     protected $pdo;
     protected $operationResult;
      CONST STATUS_OK = 200;
-     CONST STATUS_ERROR = 400;
+     CONST STATUS_ERROR = 2002;
      CONST NO_DATA = 202;
 
     protected function __construct($arrayConfig) {

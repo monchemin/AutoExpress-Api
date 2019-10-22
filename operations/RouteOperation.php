@@ -13,6 +13,7 @@ require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'DateUtils.php']);
 require_once join(DIRECTORY_SEPARATOR, ['entities', 'Routes.php']);
 require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
+require_once 'CustomerOperation.php';
 
 class RouteOperation extends OperationBase
 {
@@ -35,32 +36,50 @@ class RouteOperation extends OperationBase
 
     protected function create()
     {
-        if ($this->requestData == null) {
+        if ($this->requestData == null || !property_exists($this->requestData, "PK")) {
             $this->message = "No provided data";
             $this->status = NO_PROVIDED_DATA;
             return $this->operationResult();
         }
-        if (!property_exists($this->requestData, "PK") || !$this->customerExists()) {
-            $this->message = "No Customer provided";
+
+        $PK = $this->requestData->PK;
+        $customerOp = new CustomerOperation($this->manager);
+        $customer = $customerOp->readOne($PK);
+        if($customer == null) {
+            $this->message = "No Customer";
             $this->status = NO_PROVIDED_CUSTOMER;
+            return $this->operationResult();
+        }
+
+        if(!$customer->active) {
+            $this->message = "No active account";
+            $this->status = NO_ACTIVE_ACCOUNT;
+            return $this->operationResult();
+        }
+
+        if($customer->drivingNumber == null) {
+            $this->message = "Your Account is not driving account";
+            $this->status = NO_DRIVING_ACCOUNT;
             return $this->operationResult();
         }
 
         $price = $this->requestData->price;
         $place = $this->requestData->place;
-        $PK = $this->requestData->PK;
         $departure = $this->requestData->departure;
         $arrival = $this->requestData->arrival;
         $car = $this->requestData->car;
         $hour = $this->requestData->hour;
         $date = $this->requestData->date;
 
-        if (!is_numeric($price) || !is_numeric($place) || !is_numeric($PK) || !DateUtils::validateDate($date) || !is_numeric($departure) || !is_numeric($arrival)
+        if (!is_numeric($price) || !is_numeric($place) || !is_numeric($PK) || !DateUtils::isValidDate($date) || !is_numeric($departure) || !is_numeric($arrival)
             || !is_numeric($car) || !is_numeric($hour) || $departure == $arrival) {
             $this->message = "Error in provided data";
             $this->status = DATA_ERROR;
             return $this->operationResult();
         }
+
+
+
         try {
             $route = new Routes();
             $route->routeDate = $date;
@@ -127,13 +146,11 @@ class RouteOperation extends OperationBase
         }
     }
 
-    private function customerExists()
+    private function getCustomer()
     {
-        $exists = false;
         $this->manager->getData(Customers::class, array(), array("PK" => $this->requestData->PK));
         $loginResult = $this->manager->operationResult;
-        if ($loginResult->status == 200 && $loginResult->response != null) $exists = true;
-        return $exists;
+        return  ($loginResult->status == 200 && $loginResult->response != null) ? $loginResult->response[0] : null;
     }
 
     public function process()
