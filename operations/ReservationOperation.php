@@ -130,14 +130,37 @@ class ReservationOperation extends OperationBase
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-        if ($this->pk != 0) {
-            $reservation = new Reservations();
-
-            $reservation->PK = $this->pk;
-            $this->manager->deleteData($reservation);
-            $this->operationStatus = true;
+        if ($this->requestData == null) {
+            $this->message = "No provided data";
+            $this->status = NO_PROVIDED_DATA;
+            return;
         }
+        $customerId = property_exists($this->requestData, "PK") ? $this->requestData->PK : null;
+        $reservationId = property_exists($this->requestData, "reservationId") ? $this->requestData->reservationId : null;
+        if(!is_numeric($customerId) || !is_numeric($reservationId)) {
+            $this->message = "Data Error";
+            $this->status = DATA_ERROR;
+        }
+        $this->manager->getData(Reservations::class, array("FK_Customer"), array("PK" => $reservationId));
+        $result =  $this->manager->operationResult;
+        if($result->status == 200 && count($result->response)==1 && $result->response[0]->FK_Customer ==  $customerId )
+        {
+            $reservation = new Reservations();
+            $reservation->PK = $reservationId;
+            $reservation->cancelled = date("Y-m-d H:i:s");
+            $this->manager->changeData($reservation);
+            if( $this->manager->operationResult->status == 200) {
+                $this->operationStatus = true;
+            } else {
+                $this->message = "Data Error";
+                $this->status = SQL_ERROR;
+            }
+
+        } else {
+            $this->message = "Error in provided data";
+            $this->status = DATA_ERROR;
+        }
+
     }
 
     private function customerExists($customer)
@@ -174,8 +197,6 @@ class ReservationOperation extends OperationBase
 
     public function operationResult()
     {
-        //return array("status" => "120", "errorMessage"=>"Erreur dans la data");
-
         return $this->operationStatus ? $this->manager->operationResult : array("status" => $this->status, "errorMessage" => $this->message);
     }
 }

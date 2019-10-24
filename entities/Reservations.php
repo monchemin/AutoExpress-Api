@@ -31,6 +31,9 @@ class Reservations {
      */
     public $place;
 
-
+    /**
+     * @ORM\TableColumn(columnName="cancelled")
+     */
+    public $cancelled;
 }
 ?>
