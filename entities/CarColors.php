@@ -9,7 +9,7 @@ class CarColors {
     /**
      * @TableColumn(columnName="PK", isPK="1")
      */
-    public $PK;
+    public $Id;
     /**
      * @TableColumn(columnName="colorName")
      */

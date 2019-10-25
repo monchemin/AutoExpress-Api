@@ -9,7 +9,7 @@ class Customers {
  /**
      * @ORM\TableColumn(columnName="PK", isPK="1")
      */
-    public $PK;
+    public $Id;
     /**
      * @ORM\TableColumn(columnName="firstName")
      */

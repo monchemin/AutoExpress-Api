@@ -34,7 +34,7 @@ class CarColorOperation extends OperationBase {
     {
         if($this->requestData != null &&  property_exists($this->requestData, "PK")) {
             $carColor = new CarColors();
-            $carColor->PK = $this->requestData->PK;
+            $carColor->Id = $this->requestData->PK;
             if  (property_exists($this->requestData, "colorName") ) $carColor->colorName = $this->requestData->colorName;
             $this->manager->changeData($carColor);
             //$this->readOne($carColor->PK);

@@ -99,7 +99,7 @@ final class QueryBuilder
     }
 
     public static function commonQuery() {
-        return "SELECT route.PK, route.routeDate, route.routePrice, route.routePlace, (route.routePlace - coalesce(sum(reservation.place),0)) as remainingPlace, pickuphour.hour,
+        return "SELECT route.PK as routeId, route.routeDate, route.routePrice, route.routePlace, (route.routePlace - coalesce(sum(reservation.place),0)) as remainingPlace, pickuphour.hour,
                     fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone
         FROM route
         INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK
@@ -113,7 +113,7 @@ final class QueryBuilder
     }
 
     public static function getRouteStation() {
-        return "select station.PK, concat(city.cityName, ' ', zone.zoneName, ' ', station.stationName) as stationName, station.stationAddress
+        return "select station.PK as stationId, concat(city.cityName, ' ', zone.zoneName, ' ', station.stationName) as stationName, station.stationAddress
         from station
         inner join zone on station.FK_Zone = zone.PK
         inner join city on zone.FK_City = city.PK
@@ -130,13 +130,13 @@ final class QueryBuilder
     }
 
     public static function commonReservation() {
-        return "SELECT reservation.PK as reservation, reservation.place as remainingPlace, route.PK, route.routeDate, route.routePrice, 
+        return "SELECT reservation.PK as reservationId, reservation.place as place, route.PK as routeId, route.routeDate, route.routePrice, 
         pickuphour.hour,
         fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, 
         toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone,
         car.registrationNumber, car.year,
         carmodel.modelName, carbrand.brandName, carcolor.colorName,
-        customer.firstName, customer.lastName
+        customer.firstName as driverFirstName, customer.lastName as driverLastName
             FROM route
             inner JOIN reservation ON route.PK = reservation.FK_Route
             INNER JOIN station fromStation ON route.FK_DepartureStage = fromStation.PK

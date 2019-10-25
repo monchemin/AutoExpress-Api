@@ -36,15 +36,15 @@ class RouteOperation extends OperationBase
 
     protected function create()
     {
-        if ($this->requestData == null || !property_exists($this->requestData, "PK")) {
+        if ($this->requestData == null || !property_exists($this->requestData, "customerId") || !is_numeric($this->requestData->customerId)) {
             $this->message = "No provided data";
             $this->status = NO_PROVIDED_DATA;
             return $this->operationResult();
         }
 
-        $PK = $this->requestData->PK;
+        $customerId = $this->requestData->customerId;
         $customerOp = new CustomerOperation($this->manager);
-        $customer = $customerOp->readOne($PK);
+        $customer = $customerOp->readOne($customerId);
         if($customer == null) {
             $this->message = "No Customer";
             $this->status = NO_PROVIDED_CUSTOMER;
@@ -71,7 +71,7 @@ class RouteOperation extends OperationBase
         $hour = $this->requestData->hour;
         $date = $this->requestData->date;
 
-        if (!is_numeric($price) || !is_numeric($place) || !is_numeric($PK) || !DateUtils::isValidDate($date) || !is_numeric($departure) || !is_numeric($arrival)
+        if (!is_numeric($price) || !is_numeric($place) || !DateUtils::isValidDate($date) || !is_numeric($departure) || !is_numeric($arrival)
             || !is_numeric($car) || !is_numeric($hour) || $departure == $arrival) {
             $this->message = "Error in provided data";
             $this->status = DATA_ERROR;
@@ -85,7 +85,7 @@ class RouteOperation extends OperationBase
             $route->routeDate = $date;
             $route->routePlace = $place;
             $route->routePrice = $price;
-            $route->FK_Driver = $PK;
+            $route->FK_Driver = $customerId;
             $route->FK_Hour = $hour;
             $route->FK_car = $car;
             $route->FK_DepartureStage = $departure;
@@ -95,7 +95,7 @@ class RouteOperation extends OperationBase
             $this->operationStatus = true;
             if($this->manager->operationResult->lastIndex != null) {
                 $query = QueryBuilder::ownerRoutes();
-                $this->manager->getDataByQuery($query, array(':PK'=>$PK));
+                $this->manager->getDataByQuery($query, array(':PK'=>$customerId));
             }
             return $this->operationResult();
         } catch (\Exception $ex) {
@@ -155,12 +155,9 @@ class RouteOperation extends OperationBase
 
     public function process()
     {
-
         switch ($this->httpMethod) {
             case "POST" :
-                //if($this->requestData != null && property_exists($this->requestData, "PK")) return $this->customerExists();
                 $this->create();
-                //$this->read();
                 break;
             case "PUT" :
                 $this->update();

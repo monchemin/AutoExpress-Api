@@ -7,7 +7,7 @@ abstract class OperationBase
     protected $httpMethod;
     protected $requestData;
     protected $manager;
-    protected $pk;
+    protected $Id;
     protected $operationStatus = null;
     abstract protected function read();
     abstract protected function create();
@@ -20,7 +20,7 @@ abstract class OperationBase
         $this->httpMethod = $_SERVER['REQUEST_METHOD'];
         $this->requestData = json_decode(file_get_contents("php://input"));
         $uri = explode('/', $_SERVER['REQUEST_URI']);
-        $this->pk = intval(trim($uri[count($uri)-1],'/'));
+        $this->Id = intval(trim($uri[count($uri)-1],'/'));
         $this->manager = $manager;
 
     }

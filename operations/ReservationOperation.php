@@ -31,7 +31,7 @@ class ReservationOperation extends OperationBase
     protected function read()
     {
 
-        ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Reservations::class);
+        ($this->Id != 0) ? $this->readOne($this->Id) : $this->manager->getData(Reservations::class);
         $this->operationStatus = true;
     }
 
@@ -135,7 +135,7 @@ class ReservationOperation extends OperationBase
             $this->status = NO_PROVIDED_DATA;
             return;
         }
-        $customerId = property_exists($this->requestData, "PK") ? $this->requestData->PK : null;
+        $customerId = property_exists($this->requestData, "customerId") ? $this->requestData->customerId : null;
         $reservationId = property_exists($this->requestData, "reservationId") ? $this->requestData->reservationId : null;
         if(!is_numeric($customerId) || !is_numeric($reservationId)) {
             $this->message = "Data Error";

@@ -73,25 +73,33 @@ class CustomerOperation extends OperationBase {
             $this->status = NO_PROVIDED_DATA;
             return;
         }
-        if (!property_exists($this->requestData, "PK")) {
+        if (!property_exists($this->requestData, "Id")) {
             $this->message = "No Customer provided";
             $this->status = NO_PROVIDED_CUSTOMER;
             return;
         }
+
+        $customerId = $this->requestData->Id;
         
-        $this->manager->getData(Customers::class, array("PK"), 
-                array("eMail" => $this->requestData->email, "PK"=>$this->requestData->PK));
+        $this->manager->getData(Customers::class, array("PK"),
+                array("eMail" => $this->requestData->email, "PK"=>$customerId));
                 if( $this->manager->operationResult->status == 200 
                     && count($this->manager->operationResult->response)==1 
-                    && $this->manager->operationResult->response[0]->PK ==  $this->requestData->PK ) {
+                    && $this->manager->operationResult->response[0]->PK ==  $customerId ) {
                                
             $customer = new Customers();
-            $customer->PK = $this->requestData->PK;
+            $customer->PK = $customerId;
             if (property_exists($this->requestData, "firstName")) $customer->firstName = $this->requestData->firstName;
             if (property_exists($this->requestData, "lastName")) $customer->lastName = $this->requestData->lastName;
             if (property_exists($this->requestData, "phoneNumber")) $customer->phoneNumber = $this->requestData->phoneNumber;
             $this->manager->changeData($customer);
-            $this->operationStatus = true;
+            if($this->manager->operationResult->status == 200) {
+                $this->operationStatus = true;
+            } else {
+                $this->message = "I'm not able to change your information";
+                $this->status = SQL_ERROR;
+            }
+
         } else {
             $this->message = "I'm not able to change your information";
             $this->status = DATA_ERROR;
@@ -110,7 +118,7 @@ class CustomerOperation extends OperationBase {
             if($this->pk != 0) {
             $customer = new Customers();
 
-            $customer->PK = $this->pk;
+            $customer->Id = $this->pk;
             $this->manager->deleteData($customer);
             $this->operationStatus = true;
         }
@@ -151,21 +159,18 @@ class CustomerOperation extends OperationBase {
     public function login() {
         $response = array();
         if( $this->requestData != null && property_exists($this->requestData, "login")) {
-            $this->manager->getData(Customers::class, array("PK", "firstName", "lastName", "eMail", "phoneNumber", "drivingNumber", "active"),
+            $this->manager->getData(Customers::class, array("Id", "firstName", "lastName", "eMail", "phoneNumber", "drivingNumber", "active"),
                     array("eMail" => $this->requestData->login, "password"=>$this->requestData->password)
                 );
             if($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response)==1 ) {
                 $response['status'] = 200;
-                $response['isLog'] = true;
                 $response['response'] = $this->manager->operationResult->response;               
             } else {
 
-                $response['status'] = 200;
-                $response['isLog'] = false;
-
+                $response['status'] = SQL_ERROR;
             }
         
-        } else { $response['status'] = 120;}
+        } else { $response['status'] = NO_PROVIDED_DATA;}
         return $response;
     }
 
@@ -175,7 +180,7 @@ class CustomerOperation extends OperationBase {
             $this->status = NO_PROVIDED_DATA;
             return $this->operationResult();
         }
-        $customerId = property_exists($this->requestData, "PK") ? $this->requestData->PK : null;
+        $customerId = property_exists($this->requestData, "Id") ? $this->requestData->Id : null;
         $oldPassword = property_exists($this->requestData, "oldPassword") ? $this->requestData->oldPassword : null;
         $newPassword = property_exists($this->requestData, "newPassword") ? $this->requestData->newPassword : null;
         $mail = property_exists($this->requestData, "newPassword") ? $this->requestData->email : null;
@@ -206,7 +211,7 @@ class CustomerOperation extends OperationBase {
             $this->status = NO_PROVIDED_DATA;
             return $this->operationResult();
         }
-        $customerId = property_exists($this->requestData, "PK") ? $this->requestData->PK : null;
+        $customerId = property_exists($this->requestData, "Id") ? $this->requestData->Id : null;
         $password = property_exists($this->requestData, "password") ? $this->requestData->password : null;
         $oldMail = property_exists($this->requestData, "oldMail") ? $this->requestData->oldMail : null;
         $newMail = property_exists($this->requestData, "newMail") ? $this->requestData->newMail : null;
@@ -244,7 +249,7 @@ class CustomerOperation extends OperationBase {
             $this->status = NO_PROVIDED_DATA;
             return $this->operationResult();
         }
-        $customerId = property_exists($this->requestData, "PK") ? $this->requestData->PK : null;
+        $customerId = property_exists($this->requestData, "Id") ? $this->requestData->Id : null;
         $password = property_exists($this->requestData, "password") ? $this->requestData->password : null;
         $mail = property_exists($this->requestData, "eMail") ? $this->requestData->eMail : null;
         $drivingNumber = property_exists($this->requestData, "drivingNumber") ? $this->requestData->drivingNumber : null;
@@ -282,7 +287,7 @@ class CustomerOperation extends OperationBase {
             $this->status = NO_PROVIDED_DATA;
             return $this->operationResult();
         }
-        $customerId = property_exists($this->requestData, "PK") ? $this->requestData->PK : null;
+        $customerId = property_exists($this->requestData, "Id") ? $this->requestData->Id : null;
         $password = property_exists($this->requestData, "password") ? $this->requestData->password : null;
         $mail = property_exists($this->requestData, "eMail") ? $this->requestData->eMail : null;
         $code = property_exists($this->requestData, "code") ? $this->requestData->code : null;
@@ -293,11 +298,11 @@ class CustomerOperation extends OperationBase {
             return $this->operationResult();
         }
 
-        $this->manager->getData(Customers::class, array("PK", "activationCode"), array("eMail" => $mail, "password"=>$password));
+        $this->manager->getData(Customers::class, array("Id", "activationCode"), array("eMail" => $mail, "password"=>$password));
         $result =  $this->manager->operationResult;
-        if( $result->status == 200 && count($result->response)==1 && $result->response[0]->PK ==  $customerId && $result->response[0]->activationCode == $code) {
+        if( $result->status == 200 && count($result->response)==1 && $result->response[0]->Id ==  $customerId && $result->response[0]->activationCode == $code) {
                 $customer = new Customers();
-                $customer->PK = $customerId;
+                $customer->Id = $customerId;
                 $customer->active = true;
                 $this->manager->changeData($customer);
                 $this->operationStatus = true;
