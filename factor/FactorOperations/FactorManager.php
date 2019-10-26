@@ -8,30 +8,37 @@ namespace FactorOperations;
 *
 */
 require_once 'ManagerOperationResult.php';
+
 use FactorData\FactorMysqlManager;
 
-final class FactorManager {
-    
+final class FactorManager
+{
+
     protected $connexion;
     const insert = 1;
     const update = 2;
     const delete = 3;
     public $operationResult;
 
-    protected function __construct($arrayConfig) {
-        $this->connexion = $this -> makeConnexion($arrayConfig);
+    protected function __construct($arrayConfig)
+    {
+        $this->connexion = $this->makeConnexion($arrayConfig);
         $this->retrieveResult();
 
     }
-    private function retrieveResult() {
+
+    private function retrieveResult()
+    {
         $this->operationResult = new ManagerOperationResult();
         $this->operationResult->status = $this->connexion->operationResult()->status;
         $this->operationResult->errorMessage = $this->connexion->operationResult()->errorMessage;
         $this->operationResult->lastIndex = $this->connexion->operationResult()->lastIndex;
         $this->operationResult->response = $this->connexion->operationResult()->resultData;
-}
+    }
+
     // make connection with configuration table
-    protected function makeConnexion($arrayConfig) {
+    protected function makeConnexion($arrayConfig)
+    {
         switch (strtolower($arrayConfig['dbdriver'])) {
             case  'mysql' :
                 return FactorMysqlManager::getConnexion($arrayConfig);
@@ -39,30 +46,35 @@ final class FactorManager {
             default :
                 return null;
         }
-        
-    }
-/**
- * information simplify by using class's instance.
- */
 
-    public function insertData($insertObject, $lastInsert=true) {
+    }
+
+    /**
+     * information simplify by using class's instance.
+     */
+
+    public function insertData($insertObject, $lastInsert = true)
+    {
 
         $this->executeQuery($insertObject, $lastInsert, self::insert);
     }
-  
-    public function changeData($insertObject, $lastInsert=false) {
+
+    public function changeData($insertObject, $lastInsert = false)
+    {
 
         $this->executeQuery($insertObject, $lastInsert, self::update);
-        
+
     }
-  
-    public function deleteData($insertObject) {
-        $this->executeQuery($insertObject, $lastInsert=false, self::delete);
+
+    public function deleteData($insertObject)
+    {
+        $this->executeQuery($insertObject, $lastInsert = false, self::delete);
     }
-  
-   
+
+
     // get records by criteria
-    public function getData($strClassName, $fieldList=array(), $whereArray=array(), $orderByArray=array()) {
+    public function getData($strClassName, $fieldList = array(), $whereArray = array(), $orderByArray = array())
+    {
         //print_r($whereArray);
         $queryAndParams = FactorUtils::makeGetDataQuery($strClassName, $fieldList, $whereArray, $orderByArray);
         //echo $queryAndParams['query'];
@@ -71,7 +83,7 @@ final class FactorManager {
         $queryResults = $this->operationResult->response;
         $bind = FactorUtils::getPropertyBindColumn($strClassName);
         $resultInstance = array();
-        if($this->operationResult->status == 200) {
+        if ($this->operationResult->status == 200) {
             if ($queryResults !== null) {
                 foreach ($queryResults As $row) {
                     $class = new \ReflectionClass($strClassName);
@@ -85,27 +97,30 @@ final class FactorManager {
 
                 $this->operationResult->response = $resultInstance;
             }
-            
+
 
         }
-       
+
     }
 
-/**
- * data retrieve by complexe query
- */
-    public function getDataByQuery($query, $params) {
+    /**
+     * data retrieve by complexe query
+     */
+    public function getDataByQuery($query, $params)
+    {
         //return new EntityManager($query, $params, $this->connexion);
         $this->connexion->getData($query, $params);
         $this->retrieveResult();
     }
 
-    protected function getObjectVarsValues($insertObject) {
-       // FactorUtils::
+    protected function getObjectVarsValues($insertObject)
+    {
+        // FactorUtils::
 
     }
 
-    protected function executeQuery($insertObject, $lastInsert, $operation) {
+    protected function executeQuery($insertObject, $lastInsert, $operation)
+    {
         $queryAndParams = array();
         switch ($operation) {
             case self::insert :
@@ -113,27 +128,30 @@ final class FactorManager {
                 break;
             case self::update :
                 $queryAndParams = FactorUtils::makeUpdateQuery($insertObject);
-               break;
+                break;
             case self::delete :
                 $queryAndParams = FactorUtils::makedeleteQuery($insertObject);
                 break;
         }
-         $this->connexion->modifyData($queryAndParams['query'], $queryAndParams['sqlVars'], $lastInsert);
+        $this->connexion->modifyData($queryAndParams['query'], $queryAndParams['sqlVars'], $lastInsert);
         $this->retrieveResult();
 
-        
+
     }
 
-    public function execute($query, $params, $lastInsert) {
+    public function execute($query, $params, $lastInsert)
+    {
         $this->connexion->modifyData($query, $params, $lastInsert);
         $this->retrieveResult();
     }
 
     // fonction d'entrée pour assurer une seule instance du manager 
-    public static function create($arrayConfig) {
-        return  ( is_array($arrayConfig) &&  count($arrayConfig) >= 4 ) ?   new FactorManager($arrayConfig) : null; 
-        
+    public static function create($arrayConfig)
+    {
+        return (is_array($arrayConfig) && count($arrayConfig) >= 4) ? new FactorManager($arrayConfig) : null;
+
     }
 
 }
+
 ?>
