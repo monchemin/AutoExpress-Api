@@ -82,7 +82,7 @@ class ReservationOperation extends OperationBase
                 MailUtils::sendReservationMail($customer, $this->manager->operationResult->response[0], "fr");
             }
         } else {
-            $this->message = "Data error";
+            $this->message = "Data res error";
             $this->status = DATA_ERROR;
         }
 
@@ -177,9 +177,7 @@ class ReservationOperation extends OperationBase
 
         switch ($this->httpMethod) {
             case "POST" :
-                //if($this->requestData != null && property_exists($this->requestData, "PK")) return $this->customerExists();
                 $this->create();
-                //$this->read();
                 break;
             case "PUT" :
                 $this->update();

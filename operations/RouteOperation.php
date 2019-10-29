@@ -18,8 +18,8 @@ require_once 'CustomerOperation.php';
 class RouteOperation extends OperationBase
 {
 
-    private $message = "";
-    private $status = 200;
+    private $message = "authorisation required";
+    private $status = NO_AUTHORIZATION;
 
     function __construct(FactorManager $manager)
     {
@@ -31,7 +31,7 @@ class RouteOperation extends OperationBase
     protected function read()
     {
 
-        ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Routes::class);
+       // ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Routes::class);
     }
 
     protected function create()

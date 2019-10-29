@@ -14,8 +14,8 @@ require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 class CustomerOperation extends OperationBase
 {
 
-    private $message = "Erreur dans la data";
-    private $status = 200;
+    private $message = "authorisation required";
+    private $status = NO_AUTHORIZATION;
 
     function __construct(FactorManager $manager)
     {
@@ -26,8 +26,9 @@ class CustomerOperation extends OperationBase
     protected function read()
     {
 
-        ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Customers::class);
-        $this->operationStatus = true;
+       // ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Customers::class);
+       // $this->operationStatus = true;
+
     }
 
     protected function create()
@@ -109,7 +110,7 @@ class CustomerOperation extends OperationBase
 
     public function readOne($pk)
     {
-        $this->manager->getData(Customers::class, array(), array("PK" => $pk));
+        $this->manager->getData(Customers::class, array(), array("Id" => $pk));
         $loginResult = $this->manager->operationResult;
         return ($loginResult->status == 200 && $loginResult->response != null) ? $loginResult->response[0] : null;
     }

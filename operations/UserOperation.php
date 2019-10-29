@@ -4,9 +4,12 @@ namespace Operations;
 use Entities\Users;
 use FactorOperations\FactorManager;
 
+require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 
 class UserOperation extends OperationBase {
 
+    private $message = "authorisation required";
+    private $status = NO_AUTHORIZATION;
 
     function __construct(FactorManager $manager)
     {
@@ -17,8 +20,9 @@ class UserOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Users::class);
-        $this->operationStatus = true;
+       //  ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Users::class);
+       // $this->operationStatus = true;
+
     }
 
     protected function create()
@@ -108,7 +112,7 @@ class UserOperation extends OperationBase {
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => $this->status, "errorMessage" => $this->message);
     }
 }
 ?>

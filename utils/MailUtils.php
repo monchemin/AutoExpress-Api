@@ -97,7 +97,7 @@ class MailUtils
         $message = "Bonjour <i>". $lastName .", </i><br>"
             ." <p>Voici les details de votre r&eacute;servation<br>"
             ."Numero de reservation : <strong>".$reservation['reservation']."</strong><br>"
-            ."Place(s) : <strong>".$reservation['remainingPlace']."</strong><br></p>"
+            ."Place(s) : <strong>".$reservation['place']."</strong><br></p>"
             ."Prix : ".$reservation['routePrice']."<br>"
             ."Date : ".$reservation['routeDate']." <br>"
             ."Heure : ".$reservation['hour']."<br>"
@@ -105,7 +105,7 @@ class MailUtils
             ."Arriv&eacute;e : ".$reservation['tStation']."<br> </p>"
 
             ." <p><strong>conduteur et v&eacute;hicule</strong><br>"
-            ."conduteur : <strong>".$reservation['firstName']."</strong><br>"
+            ."conduteur : <strong>".$reservation['driverFirstName']."</strong><br>"
             ."Immatriculation : <strong>".$reservation['registrationNumber']."</strong><br></p>"
             ."Couleur : ".$reservation['colorName']." <br>"
             ."Marque : ".$reservation['brandName']."<br>"
