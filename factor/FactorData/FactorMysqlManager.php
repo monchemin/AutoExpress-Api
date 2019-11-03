@@ -6,6 +6,8 @@ namespace FactorData;
 require_once 'IFactorDbManager.php';
 require_once 'DataOperationResult.php';
 use PDO;
+use PDOException;
+
 final class FactorMysqlManager implements IFactorDbManager {
 
     
@@ -104,6 +106,25 @@ final class FactorMysqlManager implements IFactorDbManager {
 
     public function operationResult(){
         return $this->operationResult;
+    }
+
+    public function doInTransaction($transactions) {
+        $this->operationResult = new DataOperationResult();
+        $this->pdo->beginTransaction();
+        try {
+            foreach ($transactions as $transaction) {
+                $pdoQuery = $this->pdo->prepare($transaction['query']);
+                $pdoQuery->execute($transaction['vars']);
+            }
+            $this->pdo->commit();
+            $this->operationResult->status = self::STATUS_OK;
+        } catch ( PDOException $e ) {
+            $this->pdo->rollback();
+            $this->operationResult->errorMessage = $e->getMessage();
+            $this->operationResult->status = self::STATUS_ERROR;
+        }
+
+
     }
 
     public static function getConnexion($arrayConfig) {

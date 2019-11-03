@@ -7,6 +7,7 @@ use Entities\Routes;
 use FactorOperations\FactorManager;
 use Queries\QueryBuilder;
 use utils\DateUtils;
+use utils\MailUtils;
 
 
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
@@ -31,7 +32,7 @@ class RouteOperation extends OperationBase
     protected function read()
     {
 
-       // ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Routes::class);
+        // ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Routes::class);
     }
 
     protected function create()
@@ -45,19 +46,19 @@ class RouteOperation extends OperationBase
         $customerId = $this->requestData->customerId;
         $customerOp = new CustomerOperation($this->manager);
         $customer = $customerOp->readOne($customerId);
-        if($customer == null) {
+        if ($customer == null) {
             $this->message = "No Customer";
             $this->status = NO_PROVIDED_CUSTOMER;
             return $this->operationResult();
         }
 
-        if(!$customer->active) {
+        if (!$customer->active) {
             $this->message = "No active account";
             $this->status = NO_ACTIVE_ACCOUNT;
             return $this->operationResult();
         }
 
-        if($customer->drivingNumber == null) {
+        if ($customer->drivingNumber == null) {
             $this->message = "Your Account is not driving account";
             $this->status = NO_DRIVING_ACCOUNT;
             return $this->operationResult();
@@ -79,7 +80,6 @@ class RouteOperation extends OperationBase
         }
 
 
-
         try {
             $route = new Routes();
             $route->routeDate = $date;
@@ -90,12 +90,13 @@ class RouteOperation extends OperationBase
             $route->FK_car = $car;
             $route->FK_DepartureStage = $departure;
             $route->FK_ArrivalStage = $arrival;
+            $route->createdAt = date("Y-m-d H:i:s");
             $this->manager->insertData($route);
 
             $this->operationStatus = true;
-            if($this->manager->operationResult->lastIndex != null) {
+            if ($this->manager->operationResult->lastIndex != null) {
                 $query = QueryBuilder::ownerRoutes();
-                $this->manager->getDataByQuery($query, array(':PK'=>$customerId));
+                $this->manager->getDataByQuery($query, array(':PK' => $customerId));
             }
             return $this->operationResult();
         } catch (\Exception $ex) {
@@ -130,27 +131,94 @@ class RouteOperation extends OperationBase
 
     protected function readOne($pk)
     {
-        $this->manager->getData(Routes::class, array(), array("PK" => $pk));
+        $this->manager->getData(Routes::class, array(), array('PK' => $pk));
     }
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-        if ($this->pk != 0) {
-            $route = new Routes();
-
-            $route->PK = $this->pk;
-            $this->manager->deleteData($route);
-        } else {
-            $this->operationStatus = 400;
+        if ($this->requestData == null) {
+            $this->message = "No provided data";
+            $this->status = NO_PROVIDED_DATA;
+            return;
         }
+        $customerId = property_exists($this->requestData, 'customerId') ? $this->requestData->customerId : null;
+        $routeId = property_exists($this->requestData, 'routeId') ? $this->requestData->routeId : null;
+        if (!is_numeric($customerId) || !is_numeric($routeId)) {
+            $this->message = "Data Error";
+            $this->status = DATA_ERROR;
+        }
+
+        $query = QueryBuilder::deleteRouteReservation();
+
+        $this->manager->getDataByQuery($query, array(':PK' => $routeId));
+        $result = $this->manager->operationResult;
+        if ($result->status == 200 && count($result->response) == 1 && $result->response[0]['driver'] == $customerId) {
+            $reservationIds = explode(',', $result->response[0]['reservationIds']);
+            $reservationArray = array(
+                'query' => QueryBuilder::updateReservations(count($reservationIds)),
+                'vars' => $reservationIds
+            );
+            $routeArray = array(
+                'query' => QueryBuilder::routeDelete(),
+                "vars" => array(':PK' => $routeId)
+            );
+            $this->manager->doIntransaction(array($reservationArray, $routeArray));
+            if ($this->manager->operationResult->status == 200) {
+                $this->operationStatus = true;
+                MailUtils::sendRouteDeleted(explode(',', $result->response[0]['mails']));
+
+            } else {
+                $this->message = "Data Error";
+                $this->status = SQL_ERROR;
+            }
+
+        } else {
+
+            $this->manager->getData(Routes::class, array('FK_driver'), array('PK' => $routeId));
+            $result = $this->manager->operationResult;
+            if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->FK_Driver == $customerId) {
+                $route = new Routes();
+                $route->PK = $routeId;
+                $route->deletedAt = date("Y-m-d H:i:s");
+                $this->manager->changeData($route);
+                if ($this->manager->operationResult->status == 200) {
+                    $this->operationStatus = true;
+                } else {
+                    $this->message = "Data Error";
+                    $this->status = SQL_ERROR;
+                }
+            } else {
+                $this->message = "Error in provided data";
+                $this->status = DATA_ERROR;
+            }
+        }
+    }
+
+    public function routeReservations()
+    {
+        if ($this->requestData == null) {
+            $this->message = "No provided data";
+            $this->status = NO_PROVIDED_DATA;
+            return;
+        }
+        $customerId = property_exists($this->requestData, 'customerId') ? $this->requestData->customerId : null;
+        $routeId = property_exists($this->requestData, 'routeId') ? $this->requestData->routeId : null;
+        if (!is_numeric($customerId) || !is_numeric($routeId)) {
+            $this->message = "Data Error";
+            $this->status = DATA_ERROR;
+            return;
+        }
+
+        $query = QueryBuilder::routeReservations();
+        $this->manager->getDataByQuery($query, array(':PK' => $routeId, ':driver' => $customerId));
+        $this->operationStatus = true;
     }
 
     private function getCustomer()
     {
         $this->manager->getData(Customers::class, array(), array("PK" => $this->requestData->PK));
         $loginResult = $this->manager->operationResult;
-        return  ($loginResult->status == 200 && $loginResult->response != null) ? $loginResult->response[0] : null;
+        return ($loginResult->status == 200 && $loginResult->response != null) ? $loginResult->response[0] : null;
     }
 
     public function process()
@@ -167,17 +235,16 @@ class RouteOperation extends OperationBase
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+            // $this->read();
         }
         return $this->operationResult();
 
     }
 
-    protected function operationResult()
+    public function operationResult()
     {
         return $this->operationStatus ? $this->manager->operationResult : array("status" => $this->status, "errorMessage" => $this->message);
     }
 
 }
-
 ?>

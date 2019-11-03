@@ -98,7 +98,8 @@ class ReservationOperation extends OperationBase
         if ($this->manager->operationResult->status == 200) {
             //print_r($this->manager->operationResult);
             $remainingPlace = $this->manager->operationResult->response[0]['place'];
-            if ($place <= $remainingPlace) {
+            $deleteAt = $this->manager->operationResult->response[0]['deletedAt'];
+            if ($place <= $remainingPlace && $deleteAt == null) {
                 $ok = true;
             }
         }
@@ -147,7 +148,7 @@ class ReservationOperation extends OperationBase
         {
             $reservation = new Reservations();
             $reservation->PK = $reservationId;
-            $reservation->cancelled = date("Y-m-d H:i:s");
+            $reservation->deletedAt = date("Y-m-d H:i:s");
             $this->manager->changeData($reservation);
             if( $this->manager->operationResult->status == 200) {
                 $this->operationStatus = true;
@@ -166,7 +167,7 @@ class ReservationOperation extends OperationBase
     private function customerExists($customer)
     {
         $exists = false;
-        $this->manager->getData(Customers::class, array(), array("PK" => $customer));
+        $this->manager->getData(Customers::class, array(), array("Id" => $customer));
         $loginResult = $this->manager->operationResult;
         if ($loginResult->status == 200 && $loginResult->response != null) $exists = true;
         return $exists;

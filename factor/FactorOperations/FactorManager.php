@@ -145,6 +145,11 @@ final class FactorManager
         $this->retrieveResult();
     }
 
+    public function doIntransaction($transactions) {
+        $this->connexion->doInTransaction($transactions);
+        $this->retrieveResult();
+    }
+
     // fonction d'entrée pour assurer une seule instance du manager 
     public static function create($arrayConfig)
     {

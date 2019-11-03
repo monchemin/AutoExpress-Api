@@ -32,8 +32,8 @@ class Reservations {
     public $place;
 
     /**
-     * @ORM\TableColumn(columnName="cancelled")
+     * @ORM\TableColumn(columnName="deletedAt")
      */
-    public $cancelled;
+    public $deletedAt;
 }
 ?>

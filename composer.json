@@ -3,7 +3,8 @@
         "doctrine/annotations": "^1.4",
       "ext-json": "*",
         "phpmailer/phpmailer": "^6.1",
-      "ext-cassandra": "*"
+      "ext-cassandra": "*",
+      "ext-pdo": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*"

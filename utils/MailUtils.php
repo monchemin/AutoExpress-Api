@@ -4,6 +4,7 @@
 namespace utils;
 
 use Entities\Customers;
+use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
 require_once join(DIRECTORY_SEPARATOR, ['vendor', 'autoload.php']);
@@ -17,14 +18,17 @@ class MailUtils
     $mail = self::initMailer();
      $mail->From = "info@toncopilote.com";
      $mail->FromName = "OuiLift";
-     $mail->addAddress($mailAddress, $lastName);
-
-     $mail->isHTML(true);
+     try {
+         $mail->addAddress($mailAddress, $lastName);
+     } catch (Exception $e) {
+     }
 
      $mail->Subject = $language === "fr" ? "Activer votre compte OuiLift" : "Activate your OuiLift account";
      $mail->Body = $language === "fr" ? self::messageFr($mailAddress, $lastName, $code) : self::messageEn($mailAddress, $lastName, $code);
-     $mail->AltBody = "This is the plain text version of the email content";
-     $mail->send();
+     try {
+         $mail->send();
+     } catch (Exception $e) {
+     }
 
  }
 
@@ -33,14 +37,37 @@ class MailUtils
         $mail = self::initMailer();
         $mail->From = "info@toncopilote.com";
         $mail->FromName = "OuiLift Reservation";
-        $mail->addAddress($customer->eMail, $customer->firstName);
-
-        $mail->isHTML(true);
+        try {
+            $mail->addAddress($customer->eMail, $customer->firstName);
+        } catch (Exception $e) {
+        }
 
         $mail->Subject = $language === "fr" ? "Votre reservation OuiLift" : "Your OuiLift reservation";
         $mail->Body = $language === "fr" ? self::reservationFr($reservation, $customer->firstName) : self::reservationEn($reservation, $customer->firstName);
-        $mail->AltBody = "This is the plain text version of the email content";
-        $mail->send();
+
+        try {
+            $mail->send();
+        } catch (Exception $e) {
+        }
+
+    }
+
+    public static function sendRouteDeleted($mails, $language='en') {
+        $mail = self::initMailer();
+        $mail->From = "info@toncopilote.com";
+        $mail->FromName = "OuiLift Reservation";
+        try {
+            foreach ($mails as $address) {
+                $mail->addAddress($address);
+            }
+        } catch (Exception $e) {}
+
+        $mail->Subject = $language === "fr" ? "Annulation Reservation" : "Reservation cancelled";
+        $mail->Body = $language === "fr" ? self::routeDeleteFr() : self::routeDeleteEn();
+        try {
+            $mail->send();
+        } catch (Exception $e) {
+        }
 
     }
 
@@ -60,6 +87,8 @@ class MailUtils
      $mail->SMTPSecure = "tls";
 //Set TCP port to connect to
      $mail->Port = 587;
+     $mail->isHTML(true);
+     $mail->AltBody = "This is the plain text version of the email content";
 
      return $mail;
  }
@@ -143,6 +172,30 @@ class MailUtils
             ."<p><i>Thank you for coming to the meeting place ten minutes in advance</i></p>"
 
 
+            ."<p>OuiLift Team<br>
+                <a href='http://www.ouilift.com'>http://www.ouilift.com</a></p>";
+        return $message;
+
+    }
+
+    private static function routeDeleteFr() {
+        $message = "Bonjour <br>"
+            ." <p>Une de vos reservations a été annulée en raison de l'annulation de l'itinéraire par le conduction<br>
+                Veuillez SVP consulter votre compte pour plus d'information."
+            ."Nous sommes d&eacute;sol&eacute;s pour le d&eacute;sagr&eacute;ment caus&eacute;<br></p>"
+            ."<p>
+                L'&eacute;quipe OuiLift<br>
+                <a href='http://www.ouilift.com'>http://www.ouilift.com</a></p>";
+        return $message;
+
+    }
+
+    private static function routeDeleteEn() {
+        $message = "Hello, "
+
+            ." <p>One of your reservations has been canceled because the driver has canceled the itinerary.<br>
+                 please check your account for more information.<p>
+                 We are sorry for the inconvenience</p>"
             ."<p>OuiLift Team<br>
                 <a href='http://www.ouilift.com'>http://www.ouilift.com</a></p>";
         return $message;

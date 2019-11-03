@@ -48,5 +48,15 @@ class Routes {
      */
     public $FK_car;
 
+    /**
+     * @ORM\TableColumn(columnName="createdAt")
+     */
+    public $createdAt;
+
+    /**
+     * @ORM\TableColumn(columnName="deletedAt")
+     */
+    public $deletedAt;
+
 }
 ?>
