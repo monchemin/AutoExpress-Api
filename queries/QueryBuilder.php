@@ -127,7 +127,7 @@ final class QueryBuilder
 
     public static function getRoutePlace()
     {
-        return "SELECT (route.routePlace - sum(coalesce(reservation.place, 0))) as place, route.deletedAt
+        return "SELECT (route.routePlace - sum(coalesce(reservation.place, 0))) as place, route.deletedAt, route.FK_Driver as driverId
         FROM route
         LEFT JOIN reservation ON reservation.FK_Route = route.PK
         WHERE route.PK = :pk
@@ -168,14 +168,14 @@ final class QueryBuilder
     {
         return self::commonReservation() .
             "where reservation.FK_customer = :PK 
-                AND route.routeDate >= NOW()
+                AND route.routeDate >= :date
                 AND reservation.deletedAt IS NULL";
     }
 
     public static function ownerRoutes()
     {
         return self::commonQuery() .
-            " WHERE route.routeDate >= NOW()
+            " WHERE route.routeDate >= :date
                AND  route.FK_Driver = :PK
                AND route.deletedAt IS NULL 
                GROUP BY route.PK 

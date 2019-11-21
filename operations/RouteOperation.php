@@ -21,6 +21,7 @@ class RouteOperation extends OperationBase
 
     private $message = "authorisation required";
     private $status = NO_AUTHORIZATION;
+    private static $PLACE_LIMIT = 3;
 
     function __construct(FactorManager $manager)
     {
@@ -72,7 +73,7 @@ class RouteOperation extends OperationBase
         $hour = $this->requestData->hour;
         $date = $this->requestData->date;
 
-        if (!is_numeric($price) || !is_numeric($place) || !DateUtils::isValidDate($date) || !is_numeric($departure) || !is_numeric($arrival)
+        if (!is_numeric($price) || !is_numeric($place) || ($place > self::$PLACE_LIMIT) || !DateUtils::isValidDate($date) || !is_numeric($departure) || !is_numeric($arrival)
             || !is_numeric($car) || !is_numeric($hour) || $departure == $arrival) {
             $this->message = "Error in provided data";
             $this->status = DATA_ERROR;
@@ -96,7 +97,7 @@ class RouteOperation extends OperationBase
             $this->operationStatus = true;
             if ($this->manager->operationResult->lastIndex != null) {
                 $query = QueryBuilder::ownerRoutes();
-                $this->manager->getDataByQuery($query, array(':PK' => $customerId));
+                $this->manager->getDataByQuery($query, array(':PK' => $customerId, ':date' => date("Y-m-d")));
             }
             return $this->operationResult();
         } catch (\Exception $ex) {
@@ -143,6 +144,7 @@ class RouteOperation extends OperationBase
         }
         $customerId = property_exists($this->requestData, 'customerId') ? $this->requestData->customerId : null;
         $routeId = property_exists($this->requestData, 'routeId') ? $this->requestData->routeId : null;
+        $language = property_exists($this->requestData, "language") ? $this->requestData->language : "fr";
         if (!is_numeric($customerId) || !is_numeric($routeId)) {
             $this->message = "Data Error";
             $this->status = DATA_ERROR;
@@ -165,7 +167,7 @@ class RouteOperation extends OperationBase
             $this->manager->doIntransaction(array($reservationArray, $routeArray));
             if ($this->manager->operationResult->status == 200) {
                 $this->operationStatus = true;
-                MailUtils::sendRouteDeleted(explode(',', $result->response[0]['mails']));
+                MailUtils::sendRouteDeleted(explode(',', $result->response[0]['mails']), $language);
 
             } else {
                 $this->message = "Data Error";

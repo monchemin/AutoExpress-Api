@@ -38,6 +38,7 @@ class CustomerOperation extends OperationBase
         $mail = property_exists($this->requestData, "eMail") ? $this->requestData->eMail : null;
         $number = property_exists($this->requestData, "phoneNumber") ? $this->requestData->phoneNumber : null;
         $pass = property_exists($this->requestData, "password") ? $this->requestData->password : null;
+        $language = property_exists($this->requestData, "language") ? $this->requestData->language : "fr";
 
         if ($firstName === null || $lastName === null || $mail === null || $number === null || $pass === null) {
             $this->message = "Error in provided Data";
@@ -63,7 +64,7 @@ class CustomerOperation extends OperationBase
         $this->manager->insertData($customer);
         if ($this->manager->operationResult->status == 200) {
             $this->operationStatus = true;
-            MailUtils::sendActivationMail($mail, $lastName, $code, "en");
+            MailUtils::sendActivationMail($mail, $lastName, $code, $language);
         }
     }
 
@@ -224,6 +225,7 @@ class CustomerOperation extends OperationBase
         $password = property_exists($this->requestData, "password") ? $this->requestData->password : null;
         $oldMail = property_exists($this->requestData, "oldMail") ? $this->requestData->oldMail : null;
         $newMail = property_exists($this->requestData, "newMail") ? $this->requestData->newMail : null;
+        $language = property_exists($this->requestData, "language") ? $this->requestData->language : "fr";
         if (!is_numeric($customerId) || empty($password) || empty($oldMail) || empty($newMail)) {
             $this->message = "Data empty";
             $this->status = DATA_EMPTY;
@@ -243,7 +245,7 @@ class CustomerOperation extends OperationBase
             $this->operationStatus = true;
             if ($this->manager->operationResult->status == 200) {
                 //echo "send mail ". $code;
-                MailUtils::sendActivationMail($newMail, $result->response[0]->fisrtName, $code, "en");
+                MailUtils::sendActivationMail($newMail, $result->response[0]->fisrtName, $code, $language);
             }
 
         } else {

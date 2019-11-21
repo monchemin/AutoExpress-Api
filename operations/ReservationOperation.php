@@ -59,6 +59,7 @@ class ReservationOperation extends OperationBase
 
         $routeId = property_exists($this->requestData, "route") ? $this->requestData->route : null;
         $place = property_exists($this->requestData, "place") ? $this->requestData->place : null;
+        $language = property_exists($this->requestData, "language") ? $this->requestData->language : "fr";
 
         if (!is_numeric($customerId) || !is_numeric($routeId) || !is_numeric($place) || $place < 1) {
             $this->message = "Data error";
@@ -79,7 +80,7 @@ class ReservationOperation extends OperationBase
                 $this->manager->getDataByQuery($query, array(':PK' => $reservation->PK));
 
                 $this->operationStatus = true;
-                MailUtils::sendReservationMail($customer, $this->manager->operationResult->response[0], "fr");
+                MailUtils::sendReservationMail($customer, $this->manager->operationResult->response[0], $language);
             }
         } else {
             $this->message = "Data res error";
@@ -96,10 +97,10 @@ class ReservationOperation extends OperationBase
 
         $this->manager->getDataByQuery($placeQuery, array(":pk" => $pk));
         if ($this->manager->operationResult->status == 200) {
-            //print_r($this->manager->operationResult);
             $remainingPlace = $this->manager->operationResult->response[0]['place'];
             $deleteAt = $this->manager->operationResult->response[0]['deletedAt'];
-            if ($place <= $remainingPlace && $deleteAt == null) {
+            $routeDriver = $this->manager->operationResult->response[0]['driverId'];
+            if ($place <= $remainingPlace && $deleteAt == null && $routeDriver != $customer) {
                 $ok = true;
             }
         }
@@ -124,7 +125,6 @@ class ReservationOperation extends OperationBase
 
     protected function readOne($pk)
     {
-        //$this->manager->getData(Reservations::class, array(), array("PK" => $pk));
         $query = QueryBuilder::getReservation();
         $this->manager->getDataByQuery($query, array(':PK' => $pk));
     }

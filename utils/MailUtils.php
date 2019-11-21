@@ -125,7 +125,7 @@ class MailUtils
     private static function reservationFr($reservation, $lastName) {
         $message = "Bonjour <i>". $lastName .", </i><br>"
             ." <p>Voici les details de votre r&eacute;servation<br>"
-            ."Numero de reservation : <strong>".$reservation['reservation']."</strong><br>"
+            ."Numero de reservation : <strong>".$reservation['reservationId']."</strong><br>"
             ."Place(s) : <strong>".$reservation['place']."</strong><br></p>"
             ."Prix : ".$reservation['routePrice']."<br>"
             ."Date : ".$reservation['routeDate']." <br>"
@@ -153,8 +153,8 @@ class MailUtils
     private static function reservationEn($reservation, $lastName) {
         $message = "Hello <i>". $lastName .", </i><br>"
             ." <p>Your reservation detail<br>"
-            ."Reservation Number : <strong>".$reservation['reservation']."</strong><br>"
-            ."Place(s) : <strong>".$reservation['remainingPlace']."</strong><br></p>"
+            ."Reservation Number : <strong>".$reservation['reservationId']."</strong><br>"
+            ."Place(s) : <strong>".$reservation['place']."</strong><br></p>"
             ."Price : ".$reservation['routePrice']."<br>"
             ."Date : ".$reservation['routeDate']." <br>"
             ."Hour : ".$reservation['hour']."<br>"
@@ -162,7 +162,7 @@ class MailUtils
             ."Arrival : ".$reservation['tStation']."<br> </p>"
 
             ." <p><strong>Driver and car</strong><br>"
-            ."Driver : <strong>".$reservation['firstName']."</strong><br>"
+            ."Driver : <strong>".$reservation['driverFirstName']."</strong><br>"
             ."Car Registration : <strong>".$reservation['registrationNumber']."</strong><br></p>"
             ."Color : ".$reservation['colorName']." <br>"
             ."Brand : ".$reservation['brandName']."<br>"

@@ -14,7 +14,7 @@ require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 
     $query = QueryBuilder::ownerRoutes();
 
-    $manager->getDataByQuery($query, array(':PK'=>$customerId));
+    $manager->getDataByQuery($query, array(':PK'=>$customerId, ':date' => date('Y-m-d')));
     echo json_encode($manager->operationResult);
 
 ?>
