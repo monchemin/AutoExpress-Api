@@ -26,8 +26,8 @@ class CustomerOperation extends OperationBase
     protected function read()
     {
 
-       // ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Customers::class);
-       // $this->operationStatus = true;
+        ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Customers::class);
+        $this->operationStatus = true;
 
     }
 

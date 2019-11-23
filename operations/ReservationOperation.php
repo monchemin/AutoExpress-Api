@@ -50,8 +50,8 @@ class ReservationOperation extends OperationBase
             $this->status = NO_PROVIDED_CUSTOMER;
             return;
         }
-
-        if (!$customer->active) {
+        $isFirstReservation = property_exists($this->requestData, "isFirstReservation") ? $this->requestData->isFirstReservation  : false;
+        if (!$isFirstReservation && !$customer->active) {
             $this->message = "No active account";
             $this->status = NO_ACTIVE_ACCOUNT;
             return;

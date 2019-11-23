@@ -44,7 +44,7 @@ final class QueryBuilder
         }
 
         $statement = self::commonQuery() . $beginWhere;
-        $statement .= " AND route.deletedAt IS NULL";
+        $statement .= " AND route.deletedAt IS NULL AND reservation.deletedAt IS NULL";
         if (!empty($whereClause)) $statement .= " AND " . implode(" AND ", $whereClause);
         if ($between) $statement .= " AND pickuphour.displayOrder BETWEEN :fromHour AND :toHour";
 
@@ -93,7 +93,7 @@ final class QueryBuilder
         }
 
         $statement = self::commonQuery() . $beginWhere;
-        $statement .= " AND route.deletedAt IS NULL";
+        $statement .= " AND route.deletedAt IS NULL AND reservation.deletedAt IS NULL";
         if (!empty($whereClause)) $statement .= " AND " . implode(" AND ", $whereClause);
         if ($between) $statement .= " AND pickuphour.displayOrder BETWEEN :fromHour AND :toHour";
 
@@ -131,6 +131,7 @@ final class QueryBuilder
         FROM route
         LEFT JOIN reservation ON reservation.FK_Route = route.PK
         WHERE route.PK = :pk
+        AND reservation.deletedAt IS NULL
         GROUP BY route.PK
         ";
     }

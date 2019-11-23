@@ -7,22 +7,32 @@ use FactorAnnotations AS ORM;
  */
 class Users {
  /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $userId;
     /**
-     * @ORM\TableColumn(columnName="userName")
+     * @ORM\TableColumn(columnName="user_name")
      */
     public $userName;
 
     /**
-     * @ORM\TableColumn(columnName="userLogin")
+     * @ORM\TableColumn(columnName="user_login")
      */
     public $userLogin;
     /**
-     * @ORM\TableColumn(columnName="userPassword")
+     * @ORM\TableColumn(columnName="user_password")
      */
     public $userPassword;
+
+    /**
+     * @ORM\TableColumn(columnName="created_at")
+     */
+    public $createdAt;
+
+    /**
+     * @ORM\TableColumn(columnName="deleted_at")
+     */
+    public $deletedAt;
 
 }
 ?>

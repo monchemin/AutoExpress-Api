@@ -5,6 +5,7 @@ use Entities\Users;
 use FactorOperations\FactorManager;
 
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'Users.php']);
 
 class UserOperation extends OperationBase {
 
@@ -20,8 +21,8 @@ class UserOperation extends OperationBase {
     protected function read()
     {
 
-       //  ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Users::class);
-       // $this->operationStatus = true;
+        ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(Users::class, array("userId", "userName", "userLogin"));
+         $this->operationStatus = true;
 
     }
 
@@ -33,7 +34,7 @@ class UserOperation extends OperationBase {
             $user->userName = property_exists($this->requestData, "userName") ? $this->requestData->userName : null;
             $user->userLogin = property_exists($this->requestData, "userLogin") ? $this->requestData->userLogin : null;
             $user->userPassword = property_exists($this->requestData, "userPassword") ? $this->requestData->userPassword : null;
-            //$user->customerDateCreate = date("Y-m-d H:i:s");
+            $user->createdAt = date("Y-m-d");
             $this->manager->insertData($user);
             $this->operationStatus = true;
         }
@@ -41,13 +42,13 @@ class UserOperation extends OperationBase {
 
     protected function update()
     {
-        if( $this->requestData != null && property_exists($this->requestData, "PK")) {
+        if( $this->requestData != null && property_exists($this->requestData, "userId")) {
             $user = new Users();
-            $user->PK = $this->requestData->PK;
+            $user->userId = $this->requestData->userId;
             if (property_exists($this->requestData, "userName")) $user->userName = $this->requestData->userName;
             if (property_exists($this->requestData, "userPassword")) $user->userPassword = $this->requestData->userPassword;
             $this->manager->changeData($user);
-            $this->readOne($user->PK);
+            $this->readOne($user->userId);
             $this->operationStatus = true;
         }
 
@@ -59,11 +60,11 @@ class UserOperation extends OperationBase {
     protected function delete()
     {
         //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            if($this->pk != 0) {
+            if($this->Id != 0) {
             $user = new Users();
-
-            $user->PK = $this->pk;
-            $this->manager->deleteData($user);
+            $user->userId = $this->Id;
+            $user->deletedAt = date("Y-m-d");
+            $this->manager->changeData($user);
             $this->operationStatus = true;
         }
     }
