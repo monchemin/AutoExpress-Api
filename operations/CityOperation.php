@@ -3,7 +3,8 @@ namespace Operations;
 use Entities\Cities;
 use FactorOperations\FactorManager;
 
-
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'Cities.php']);
+require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 class CityOperation extends OperationBase {
 
 
@@ -15,7 +16,7 @@ class CityOperation extends OperationBase {
 
     protected function read()
     {
-        ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Cities::class);
+        ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(Cities::class);
         $this->operationStatus = true;
     }
 
@@ -31,29 +32,30 @@ class CityOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            $City = new Cities();
-            $City->PK = $this->requestData->PK;
-            if(property_exists($this->requestData, "cityName")) $City->cityName = $this->requestData->cityName;
-            $this->manager->changeData($City);
-            $this->readOne($City->PK);
+        if($this->requestData != null && property_exists($this->requestData, "id")) {
+            $city = new Cities();
+            $city->id = $this->requestData->id;
+            if(property_exists($this->requestData, "cityName")) $city->cityName = $this->requestData->cityName;
+            $this->manager->changeData($city);
+            $this->readOne($city->id);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(Cities::class, array(), array("PK" => $pk));
+         $this->manager->getData(Cities::class, array(), array("pk" => $pk));
     }
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            if($this->pk != 0) {
-        $City = new Cities();
-        //$City->cityName = property_exists($this->requestData, "cityName") ? $this->requestData->cityName : null;
-        $City->PK = $this->pk;
-        $this->manager->deleteData($City);
-        $this->operationStatus = true;
+        if($this->Id != 0) {
+            $city = new Cities();
+            $city->id = $this->Id;
+            $this->manager->deleteData($city);
+            if($this->manager->operationResult->status == 200) {
+                $this->manager->getData(Cities::class);
+                $this->operationStatus = true;
+            }
         }
     }
 

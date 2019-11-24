@@ -54,10 +54,8 @@ class CarModelOperation extends OperationBase {
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
             if($this->Id != 0) {
             $carModel = new CarModels();
-            //$carModel->modelName = $this->requestData->modelName;
             $carModel->id = $this->Id;
             $this->manager->deleteData($carModel);
                 if($this->manager->operationResult->status == 200) {

@@ -7,11 +7,11 @@ use FactorAnnotations\TableColumn;
  */
 class Cities {
     /**
-     * @TableColumn(columnName="PK", isPK="1")
+     * @TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $id;
     /**
-     * @TableColumn(columnName="cityName")
+     * @TableColumn(columnName="city_name")
      */
     public $cityName;
 
