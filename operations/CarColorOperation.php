@@ -16,7 +16,7 @@ class CarColorOperation extends OperationBase {
 
     protected function read()
     {
-        ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(CarColors::class);
+        ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(CarColors::class);
         $this->operationStatus = true;
     }
 
@@ -32,9 +32,9 @@ class CarColorOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null &&  property_exists($this->requestData, "PK")) {
+        if($this->requestData != null &&  property_exists($this->requestData, "Id")) {
             $carColor = new CarColors();
-            $carColor->Id = $this->requestData->PK;
+            $carColor->Id = $this->requestData->Id;
             if  (property_exists($this->requestData, "colorName") ) $carColor->colorName = $this->requestData->colorName;
             $this->manager->changeData($carColor);
             //$this->readOne($carColor->PK);
@@ -43,21 +43,20 @@ class CarColorOperation extends OperationBase {
 
     }
     protected function readOne($pk) {
-        $this->manager->getData(CarColors::class, array(), array("PK" => $pk));
+        $this->manager->getData(CarColors::class, array(), array("Id" => $pk));
     }
 
     protected function delete()
     {
-        //if($this->requestData != null && $this->requestData->PK != null) {
-            if($this->pk != 0 && isset($this->manager)) {
-               
+            if($this->Id != 0 && isset($this->manager)) {
             $carColor = new CarColors();
-           
-            //$carColor->colorName = $this->requestData->colorName;
-            $carColor->PK = $this->pk;
-            //print_r($this->manager);
-            $this->manager->deteleData($carColor);
-            $this->operationStatus = true;
+            $carColor->Id = $this->Id;
+            $this->manager->deleteData($carColor);
+            if($this->manager->operationResult->status == 200) {
+                $this->manager->getData(CarColors::class);
+                $this->operationStatus = true;
+            }
+
         }
 
     }

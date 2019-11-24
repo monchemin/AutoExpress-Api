@@ -7,11 +7,11 @@ use FactorAnnotations\TableColumn;
  */
 class CarColors {
     /**
-     * @TableColumn(columnName="PK", isPK="1")
+     * @TableColumn(columnName="pk", isPK="1")
      */
     public $Id;
     /**
-     * @TableColumn(columnName="colorName")
+     * @TableColumn(columnName="color_name")
      */
     public $colorName;
 
