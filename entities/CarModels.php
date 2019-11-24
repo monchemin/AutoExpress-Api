@@ -3,22 +3,22 @@ namespace Entities;
 use FactorAnnotations AS ORM;
 /**
  * 
- * @ORM\TableName(value="carModel")
+ * @ORM\TableName(value="carmodel")
  */
 class CarModels {
  /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $id;
     /**
-     * @ORM\TableColumn(columnName="modelName")
+     * @ORM\TableColumn(columnName="model_name")
      */
     public $modelName;
 
     /**
-     * @ORM\TableColumn(columnName="FK_brand")
+     * @ORM\TableColumn(columnName="fk_brand")
      */
-    public $FK_brand;
+    public $fkBrand;
 
 }
 ?>

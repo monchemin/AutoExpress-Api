@@ -4,6 +4,8 @@ namespace Operations;
 use Entities\CarModels;
 use FactorOperations\FactorManager;
 
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'CarModels.php']);
+require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 
 class CarModelOperation extends OperationBase {
 
@@ -17,7 +19,7 @@ class CarModelOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(CarModels::class);
+         ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(CarModels::class);
         $this->operationStatus = true;
     }
 
@@ -27,7 +29,7 @@ class CarModelOperation extends OperationBase {
         if($this->requestData != null && $this->requestData->modelName != null) {
             $carModel = new CarModels();
             $carModel->modelName = $this->requestData->modelName;
-            $carModel->FK_brand =property_exists($this->requestData, "FK_brand") ? $this->requestData->FK_brand : null;
+            $carModel->fkBrand =property_exists($this->requestData, "fkBrand") ? $this->requestData->fkBrand : null;
             $this->manager->insertData($carModel);
             $this->operationStatus = true;
         }
@@ -35,31 +37,35 @@ class CarModelOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        if($this->requestData != null && property_exists($this->requestData, "id")) {
             $carModel = new CarModels();
-            $carModel->PK = $this->requestData->PK;
+            $carModel->id = $this->requestData->id;
            if(property_exists($this->requestData, "modelName")) $carModel->modelName = $this->requestData->modelName;
-           if(property_exists($this->requestData, "FK_brand")) $carModel->FK_brand = $this->requestData->FK_brand;
+           if(property_exists($this->requestData, "FK_brand")) $carModel->fkBrand = $this->requestData->fkBrand;
             $this->manager->changeData($carModel);
-            $this->readOne($carModel->PK);
+            $this->readOne($carModel->id);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(CarModels::class, array(), array("PK" => $pk));
+         $this->manager->getData(CarModels::class, array(), array("id" => $pk));
     }
 
     protected function delete()
     {
         //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            if($this->pk != 0) {
+            if($this->Id != 0) {
             $carModel = new CarModels();
             //$carModel->modelName = $this->requestData->modelName;
-            $carModel->PK = $this->pk;
+            $carModel->id = $this->Id;
             $this->manager->deleteData($carModel);
-            $this->operationStatus = true;
-        }
+                if($this->manager->operationResult->status == 200) {
+                    $this->manager->getData(CarModels::class);
+                    $this->operationStatus = true;
+                }
+
+            }
     }
 
     public function process()
@@ -79,7 +85,7 @@ class CarModelOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+                //$this->read();
         }
         return $this->operationResult();
 
