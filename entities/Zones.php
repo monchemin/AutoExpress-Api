@@ -3,22 +3,22 @@ namespace Entities;
 use FactorAnnotations AS ORM;
 /**
  * 
- * @ORM\TableName(value="Zone")
+ * @ORM\TableName(value="zone")
  */
 class Zones {
  /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $id;
     /**
-     * @ORM\TableColumn(columnName="zoneName")
+     * @ORM\TableColumn(columnName="zone_name")
      */
     public $zoneName;
 
     /**
-     * @ORM\TableColumn(columnName="FK_City")
+     * @ORM\TableColumn(columnName="fk_city")
      */
-    public $FK_City;
+    public $fkCity;
 
 }
 ?>

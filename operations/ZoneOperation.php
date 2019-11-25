@@ -4,7 +4,8 @@ namespace Operations;
 use Entities\Zones;
 use FactorOperations\FactorManager;
 
-
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'Zones.php']);
+require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 class ZoneOperation extends OperationBase {
 
 
@@ -17,7 +18,7 @@ class ZoneOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Zones::class);
+         ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(Zones::class);
         $this->operationStatus = true;
     }
 
@@ -27,7 +28,7 @@ class ZoneOperation extends OperationBase {
         if($this->requestData != null && property_exists($this->requestData, "zoneName")) {
             $zone = new Zones();
             $zone->zoneName = $this->requestData->zoneName;
-            $zone->FK_City = property_exists($this->requestData, "FK_City") ? $this->requestData->FK_City : null;
+            $zone->fkCity = property_exists($this->requestData, "fkCity") ? $this->requestData->fkCity : null;
             $this->manager->insertData($zone);
             $this->operationStatus = true;
         }
@@ -35,30 +36,32 @@ class ZoneOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        if($this->requestData != null && property_exists($this->requestData, "id")) {
             $zone = new Zones();
-            $zone->PK = $this->requestData->PK;
+            $zone->id = $this->requestData->id;
             if(property_exists($this->requestData, "zoneName")) $zone->zoneName = $this->requestData->zoneName;
-           if(property_exists($this->requestData, "FK_City")) $zone->FK_City = $this->requestData->FK_City;
+           if(property_exists($this->requestData, "fkCity")) $zone->fkCity = $this->requestData->fkCity;
             $this->manager->changeData($zone);
-            $this->readOne($zone->PK);
+            $this->readOne($zone->id);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(Zones::class, array(), array("PK" => $pk));
+         $this->manager->getData(Zones::class, array(), array("id" => $pk));
     }
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            if($this->pk != 0) {
+
+            if($this->Id != 0) {
             $zone = new Zones();
-            //$zone->zoneName = $this->requestData->zoneName;
-            $zone->PK = $this->pk;
+            $zone->id = $this->Id;
             $this->manager->deleteData($zone);
-            $this->operationStatus = true;
+                if($this->manager->operationResult->status == 200) {
+                    $this->manager->getData(Zones::class);
+                    $this->operationStatus = true;
+                }
         }
     }
 
@@ -79,24 +82,16 @@ class ZoneOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+                //$this->read();
         }
         return $this->operationResult();
 
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->picker($this->manager->operationResult) : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 
-    protected function picker($data) {
-        $picker = array();
-        foreach($data->response as $value) {
-           //echo $value->PK;
-             $picker[] = array('value'=>$value->PK, 'label'=>$value->zoneName);
-        }
-        $data->picker = $picker;
-        return $data;
-    }
+
 }
 ?>
