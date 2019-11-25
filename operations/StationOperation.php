@@ -4,6 +4,8 @@ namespace Operations;
 use Entities\Stations;
 use FactorOperations\FactorManager;
 
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'Stations.php']);
+require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 
 class stationOperation extends OperationBase {
 
@@ -17,8 +19,10 @@ class stationOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(Stations::class);
-        $this->operationStatus = true;
+         ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(Stations::class);
+        if($this->manager->operationResult->status == 200) {
+            $this->operationStatus = true;
+        }
     }
 
     protected function create()
@@ -29,7 +33,7 @@ class stationOperation extends OperationBase {
             $station->stationName = $this->requestData->stationName;
             $station->stationAddress = property_exists($this->requestData, "stationAddress") ? $this->requestData->stationAddress : null;
             $station->stationDetail = property_exists($this->requestData, "stationDetail") ? $this->requestData->stationDetail : null;
-            $station->FK_Zone = property_exists($this->requestData, "FK_Zone") ? $this->requestData->FK_Zone : null;
+            $station->fkZone = property_exists($this->requestData, "fkZone") ? $this->requestData->fkZone : null;
             $this->manager->insertData($station);
             $this->operationStatus = true;
         }
@@ -37,43 +41,43 @@ class stationOperation extends OperationBase {
 
     protected function update()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        if($this->requestData != null && property_exists($this->requestData, "id")) {
             $station = new Stations();
-            $station->PK = $this->requestData->PK;
+            $station->id = $this->requestData->id;
             if (property_exists($this->requestData, "stationName")) $station->stationName = $this->requestData->stationName;
             if (property_exists($this->requestData, "stationAddress")) $station->stationAddress = $this->requestData->stationAddress;
             if (property_exists($this->requestData, "stationDetail")) $station->stationDetail = $this->requestData->stationDetail;
-            if (property_exists($this->requestData, "FK_Zone")) $station->FK_Zone = $this->requestData->FK_Zone;
+            if (property_exists($this->requestData, "fkZone")) $station->fkZone = $this->requestData->fkZone;
             $this->manager->changeData($station);
-            $this->readOne($station->PK);
+            $this->readOne($station->id);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(Stations::class, array(), array("PK" => $pk));
+         $this->manager->getData(Stations::class, array(), array("id" => $pk));
     }
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            if($this->pk != 0) {
+
+            if($this->Id != 0) {
             $station = new Stations();
-            //$station->stationName = $this->requestData->stationName;
-            $station->PK = $this->pk;
+            $station->id = $this->Id;
             $this->manager->deleteData($station);
-            $this->operationStatus = true;
+                if($this->manager->operationResult->status == 200) {
+                    $this->manager->getData(Stations::class);
+                    $this->operationStatus = true;
+                }
         }
     }
 
     public function process()
     {
 
-
         switch ($this->httpMethod) {
             case "POST" :
                 $this->create();
-                //$this->read();
                 break;
             case "PUT" :
                 $this->update();
@@ -83,25 +87,14 @@ class stationOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
         }
         return $this->operationResult();
 
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->picker($this->manager->operationResult) : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 
-    protected function picker($data) {
-        $picker = array();
-        
-        foreach($data->response as $value) {
-           //echo $value->PK;
-             $picker[] = array('value'=>$value->PK, 'label'=>$value->stationName);
-        }
-        $data->picker = $picker;
-        return $data;
-    }
 }
 ?>

@@ -7,26 +7,26 @@ use FactorAnnotations AS ORM;
  */
 class Stations {
  /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $id;
     /**
-     * @ORM\TableColumn(columnName="stationName")
+     * @ORM\TableColumn(columnName="station_name")
      */
     public $stationName;
 
     /**
-     * @ORM\TableColumn(columnName="stationAddress")
+     * @ORM\TableColumn(columnName="station_address")
      */
     public $stationAddress;
 
     /**
-     * @ORM\TableColumn(columnName="FK_Zone")
+     * @ORM\TableColumn(columnName="fk_zone")
      */
-    public $FK_Zone;
+    public $fkZone;
 
     /**
-     * @ORM\TableColumn(columnName="stationDetail")
+     * @ORM\TableColumn(columnName="station_detail")
      */
     public $stationDetail;
 

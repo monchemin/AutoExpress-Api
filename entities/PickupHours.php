@@ -7,15 +7,15 @@ use FactorAnnotations\TableColumn;
  */
 class PickupHours {
     /**
-     * @TableColumn(columnName="PK", isPK="1")
+     * @TableColumn(columnName="pk", isPK="1")
      */
-    public $Id;
+    public $id;
     /**
      * @TableColumn(columnName="hour")
      */
     public $hour;
     /**
-     * @TableColumn(columnName="displayOrder")
+     * @TableColumn(columnName="display_order")
      */
     public $displayOrder;
 }

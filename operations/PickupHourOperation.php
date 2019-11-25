@@ -4,7 +4,8 @@ namespace Operations;
 use Entities\PickupHours;
 use FactorOperations\FactorManager;
 
-
+require_once join(DIRECTORY_SEPARATOR, ['entities', 'PickupHours.php']);
+require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
 class PickupHourOperation extends OperationBase {
 
 
@@ -17,8 +18,10 @@ class PickupHourOperation extends OperationBase {
     protected function read()
     {
 
-         ($this->pk != 0) ?  $this->readOne($this->pk) : $this->manager->getData(PickupHours::class, array(), array(), array("displayOrder"));
-        $this->operationStatus = true;
+         ($this->Id != 0) ?  $this->readOne($this->Id) : $this->manager->getData(PickupHours::class, array(), array(), array("displayOrder"));
+        if($this->manager->operationResult->status == 200) {
+            $this->operationStatus = true;
+        }
     }
 
     protected function create()
@@ -29,35 +32,39 @@ class PickupHourOperation extends OperationBase {
             $pickupHour->hour = property_exists($this->requestData, "hour") ? $this->requestData->hour : null;
             $pickupHour->displayOrder = property_exists($this->requestData, "displayOrder") ? $this->requestData->displayOrder : null;
             $this->manager->insertData($pickupHour);
-            $this->operationStatus = true;
+            if($this->manager->operationResult->status == 200) {
+                $this->operationStatus = true;
+            }
+
         }
     }
 
     protected function update()
     {
-        if($this->requestData != null && property_exists($this->requestData, "PK")) {
+        if($this->requestData != null && property_exists($this->requestData, "id")) {
             $pickupHour = new PickupHours();
-            $pickupHour->PK = $this->requestData->PK;
+            $pickupHour->id = $this->requestData->id;
             if (property_exists($this->requestData, "hour")) $pickupHour->hour = $this->requestData->hour;
             if (property_exists($this->requestData, "displayOrder")) $pickupHour->displayOrder = $this->requestData->displayOrder;
             $this->manager->changeData($pickupHour);
-            //$this->readOne($pickupHour->PK);
             $this->operationStatus = true;
         }
 
     }
     protected function readOne($pk) {
-         $this->manager->getData(PickupHours::class, array(), array("PK" => $pk));
+         $this->manager->getData(PickupHours::class, array(), array("id" => $pk));
     }
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-            if($this->pk != 0) {
+            if($this->Id != 0) {
             $pickupHour = new PickupHours();
-            $pickupHour->PK = $this->pk;
+            $pickupHour->id = $this->Id;
             $this->manager->deleteData($pickupHour);
-            $this->operationStatus = true;
+            if($this->manager->operationResult->status == 200) {
+                $this->manager->getData(PickupHours::class, array(), array(), array("displayOrder"));
+                $this->operationStatus = true;
+            }
         }
     }
 
@@ -78,28 +85,17 @@ class PickupHourOperation extends OperationBase {
                 break;
             case "DELETE" :
                 $this->delete();
-                $this->read();
+                //$this->read();
         }
         return $this->operationResult();
 
     }
     protected function operationResult()
     {
-        return $this->operationStatus ? $this->picker($this->manager->operationResult) : array("status" => "120", "errorMessage"=>"Erreur dans la data");
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => "120", "errorMessage"=>"Erreur dans la data");
     }
 
-    protected function picker($data) {
-        $picker = array();
-        if($data->response != null) {
-        foreach($data->response as $value) {
-           //echo $value->PK;
-             $picker[] = array('value'=>$value->PK, 'label'=>$value->hour);
-        }
-        $data->picker = $picker;
-        
-    }
-    return $data;
-}
+
 
 }
 ?>
