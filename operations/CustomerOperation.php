@@ -26,7 +26,7 @@ class CustomerOperation extends OperationBase
     protected function read()
     {
 
-        ($this->pk != 0) ? $this->readOne($this->pk) : $this->manager->getData(Customers::class);
+        ($this->Id != 0) ? $this->readOne($this->Id) : $this->manager->getData(Customers::class);
         $this->operationStatus = true;
 
     }
@@ -118,12 +118,11 @@ class CustomerOperation extends OperationBase
 
     protected function delete()
     {
-        //if($this->requestData != null && property_exists($this->requestData, "PK")) {
-        if ($this->pk != 0) {
+        if ($this->Id != 0) {
             $customer = new Customers();
 
-            $customer->Id = $this->pk;
-            $this->manager->deleteData($customer);
+            $customer->Id = $this->Id;
+           // $this->manager->deleteData($customer);
             $this->operationStatus = true;
         }
     }

@@ -7,25 +7,25 @@ use FactorAnnotations AS ORM;
  */
 class Customers {
  /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
     public $Id;
     /**
-     * @ORM\TableColumn(columnName="firstName")
+     * @ORM\TableColumn(columnName="first_name")
      */
     public $firstName;
 
     /**
-     * @ORM\TableColumn(columnName="lastName")
+     * @ORM\TableColumn(columnName="last_name")
      */
     public $lastName;
     /**
-     * @ORM\TableColumn(columnName="phoneNumber")
+     * @ORM\TableColumn(columnName="phone_number")
      */
     public $phoneNumber;
 
     /**
-     * @ORM\TableColumn(columnName="eMail")
+     * @ORM\TableColumn(columnName="e_mail")
      */
     public $eMail;
     /**
@@ -34,16 +34,16 @@ class Customers {
     public $password;
 
     /**
-     * @ORM\TableColumn(columnName="createdAt")
+     * @ORM\TableColumn(columnName="created_at")
      */
     public $createdAt;
     /**
-     * @ORM\TableColumn(columnName="drivingNumber")
+     * @ORM\TableColumn(columnName="driving_number")
      */
     public $drivingNumber;
 
     /**
-     * @ORM\TableColumn(columnName="activationCode")
+     * @ORM\TableColumn(columnName="activation_code")
      */
     public $activationCode;
 

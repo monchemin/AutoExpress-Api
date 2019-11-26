@@ -6,27 +6,27 @@ final class CarQueries
 
     public static function registeredCars()
     {
-        return "SELECT car.PK as Id, car.registrationNumber as number, car.year, carmodel.modelName as model, carbrand.brandName as brand, carcolor.colorName as color  
+        return "SELECT car.pk as Id, car.registration_number as number, car.year, carmodel.model_name as model, carbrand.brand_name as brand, carcolor.color_name as color  
         FROM car
-        inner join carcolor ON carcolor.PK = car.FK_carcolor
-        inner join carmodel on carmodel.PK = car.FK_carmodel
-        inner JOIN carbrand on carbrand.PK = carmodel.FK_brand
+        inner join carcolor ON carcolor.pk = car.fk_carcolor
+        inner join carmodel on carmodel.pk = car.fk_carmodel
+        inner JOIN carbrand on carbrand.pk = carmodel.fk_brand
         WHERE car.FK_customer = :customerId";
     }
 
 
     public static function create()
     {
-        return "INSERT INTO car(registrationNumber, year, FK_carmodel, FK_carcolor, FK_customer, createdAt)
+        return "INSERT INTO car(registration_number, year, fk_carmodel, fk_carcolor, fk_customer, created_at)
                 VALUES(:number, :year, :model, :color, :customer, NOW())";
     }
 
     public static function brandModel()
     {
         return "
-                SELECT carmodel.PK as Id, CONCAT(carbrand.brandName, ' ', carmodel.modelName) as model 
+                SELECT carmodel.fk as Id, CONCAT(carbrand.brand_name, ' ', carmodel.model_name) as model 
                 FROM carmodel
-                INNER JOIN carbrand ON carbrand.PK = carmodel.FK_Brand 
+                INNER JOIN carbrand ON carbrand.pk = carmodel.fk_brand 
                 ";
 
     }

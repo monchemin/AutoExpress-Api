@@ -7,54 +7,54 @@ use FactorAnnotations AS ORM;
  */
 class Routes {
     /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $Id;
     /**
-     * @ORM\TableColumn(columnName="routeDate")
+     * @ORM\TableColumn(columnName="route_date")
      */
     public $routeDate;
 
     /**
-     * @ORM\TableColumn(columnName="routePlace")
+     * @ORM\TableColumn(columnName="route_place")
      */
     public $routePlace;
 
     /**
-     * @ORM\TableColumn(columnName="routePrice")
+     * @ORM\TableColumn(columnName="route_price")
      */
     public $routePrice;
 
     /**
-     * @ORM\TableColumn(columnName="FK_Hour")
+     * @ORM\TableColumn(columnName="fk_hour")
      */
-    public $FK_Hour;
+    public $fkHour;
 
     /**
-     * @ORM\TableColumn(columnName="FK_Driver")
+     * @ORM\TableColumn(columnName="fk_driver")
      */
-    public $FK_Driver;
+    public $fkDriver;
     /**
-     * @ORM\TableColumn(columnName="FK_DepartureStage")
+     * @ORM\TableColumn(columnName="fk_departure_stage")
      */
-    public $FK_DepartureStage;
+    public $fkDepartureStage;
     /**
-     * @ORM\TableColumn(columnName="FK_ArrivalStage")
+     * @ORM\TableColumn(columnName="fk_arrival_stage")
      */
-    public $FK_ArrivalStage;
+    public $fkArrivalStage;
 
     /**
-     * @ORM\TableColumn(columnName="FK_car")
+     * @ORM\TableColumn(columnName="fk_car")
      */
-    public $FK_car;
+    public $fkCar;
 
     /**
-     * @ORM\TableColumn(columnName="createdAt")
+     * @ORM\TableColumn(columnName="created_at")
      */
     public $createdAt;
 
     /**
-     * @ORM\TableColumn(columnName="deletedAt")
+     * @ORM\TableColumn(columnName="deleted_at")
      */
     public $deletedAt;
 

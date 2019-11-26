@@ -7,24 +7,24 @@ use FactorAnnotations AS ORM;
  */
 class Reservations {
     /**
-     * @ORM\TableColumn(columnName="PK", isPK="1")
+     * @ORM\TableColumn(columnName="pk", isPK="1")
      */
-    public $PK;
+    public $id;
 
     /**
-     * @ORM\TableColumn(columnName="reservationDate")
+     * @ORM\TableColumn(columnName="reservation_date")
      */
     public $reservationDate;
 
     /**
-     * @ORM\TableColumn(columnName="FK_Route")
+     * @ORM\TableColumn(columnName="fk_route")
      */
-    public $FK_Route;
+    public $fkRoute;
 
     /**
-     * @ORM\TableColumn(columnName="FK_Customer")
+     * @ORM\TableColumn(columnName="fk_customer")
      */
-    public $FK_Customer;
+    public $fkCustomer;
 
      /**
      * @ORM\TableColumn(columnName="place")
@@ -32,7 +32,7 @@ class Reservations {
     public $place;
 
     /**
-     * @ORM\TableColumn(columnName="deletedAt")
+     * @ORM\TableColumn(columnName="deleted_at")
      */
     public $deletedAt;
 }

@@ -86,11 +86,11 @@ class RouteOperation extends OperationBase
             $route->routeDate = $date;
             $route->routePlace = $place;
             $route->routePrice = $price;
-            $route->FK_Driver = $customerId;
-            $route->FK_Hour = $hour;
-            $route->FK_car = $car;
-            $route->FK_DepartureStage = $departure;
-            $route->FK_ArrivalStage = $arrival;
+            $route->fkDriver = $customerId;
+            $route->fkHour = $hour;
+            $route->fkCar = $car;
+            $route->fkDepartureStage = $departure;
+            $route->fkArrivalStage = $arrival;
             $route->createdAt = date("Y-m-d H:i:s");
             $this->manager->insertData($route);
 
@@ -113,16 +113,16 @@ class RouteOperation extends OperationBase
     {
         if ($this->requestData != null && property_exists($this->requestData, "PK")) {
             $route = new Routes();
-            $route->PK = $this->requestData->PK;
+            $route->Id = $this->requestData->Id;
             if (property_exists($this->requestData, "routeDate")) $route->routeDate = $this->requestData->routeDate;
             if (property_exists($this->requestData, "routePlace")) $route->routePlace = $this->requestData->routePlace;
             if (property_exists($this->requestData, "routePrice")) $route->routePrice = $this->requestData->routePrice;
-            if (property_exists($this->requestData, "FK_Driver")) $route->FK_Driver = $this->requestData->FK_Driver;
-            if (property_exists($this->requestData, "FK_Hour")) $route->FK_Hour = $this->requestData->FK_Hour;
-            if (property_exists($this->requestData, "FK_DepartureStage")) $route->FK_DepartureStage = $this->requestData->FK_DepartureStage;
-            if (property_exists($this->requestData, "FK_ArrivalStage")) $route->FK_ArrivalStage = $this->requestData->FK_ArrivalStage;
+            if (property_exists($this->requestData, "FK_Driver")) $route->fkDriver = $this->requestData->FK_Driver;
+            if (property_exists($this->requestData, "FK_Hour")) $route->fkHour = $this->requestData->FK_Hour;
+            if (property_exists($this->requestData, "FK_DepartureStage")) $route->fkDepartureStage = $this->requestData->FK_DepartureStage;
+            if (property_exists($this->requestData, "FK_ArrivalStage")) $route->fkArrivalStage = $this->requestData->FK_ArrivalStage;
             $this->manager->changeData($route);
-            $this->readOne($route->PK);
+            $this->readOne($route->Id);
             $this->operationStatus = 200;
         } else {
             $this->operationStatus = 400;
@@ -176,11 +176,11 @@ class RouteOperation extends OperationBase
 
         } else {
 
-            $this->manager->getData(Routes::class, array('FK_driver'), array('PK' => $routeId));
+            $this->manager->getData(Routes::class, array('fkDriver'), array('Id' => $routeId));
             $result = $this->manager->operationResult;
-            if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->FK_Driver == $customerId) {
+            if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->fkDriver == $customerId) {
                 $route = new Routes();
-                $route->PK = $routeId;
+                $route->Id = $routeId;
                 $route->deletedAt = date("Y-m-d H:i:s");
                 $this->manager->changeData($route);
                 if ($this->manager->operationResult->status == 200) {
