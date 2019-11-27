@@ -103,60 +103,87 @@ final class QueryBuilder
 
     public static function commonQuery()
     {
-        return "SELECT route.pk as routeId, route.route_date, route.route_price, route.route_place, (route.route_place - coalesce(sum(reservation.place),0)) as remainingPlace, pickuphour.hour,
-                    fromStation.station_name as fStation, fromStation.station_detail as fStationDetail, fromZone.zone_name as fZone, toStation.station_name as tStation, toStation.station_detail as tStationDetail, toZone.zone_name as tZone
-        FROM route
-        INNER JOIN station fromStation ON route.fk_departure_stage = fromStation.pk
-        INNER JOIN station toStation ON route.fk_arrival_stage = toStation.pk
-        INNER JOIN zone fromZone ON fromZone.pk = fromStation.fk_zone
-        INNER JOIN zone toZone ON toZone.pk = toStation.fk_zone
-        INNER JOIN car ON car.pk = route.fk_car
-        LEFT JOIN reservation ON route.pk = reservation.fk_route
-        INNER JOIN pickuphour ON route.fk_hour = pickuphour.pk
+        return "SELECT route.pk as routeId, 
+                    route.route_date as routeDate, 
+                    route.route_price as routePrice, 
+                    route.route_place as routePlace, 
+                    (route.route_place - coalesce(sum(reservation.place),0)) as remainingPlace, 
+                    pickuphour.hour,
+                    fromStation.station_name as fStation, 
+                    fromStation.station_detail as fStationDetail, 
+                    fromZone.zone_name as fZone, 
+                    toStation.station_name as tStation, 
+                    toStation.station_detail as tStationDetail, 
+                    toZone.zone_name as tZone
+                FROM route
+                INNER JOIN station fromStation ON route.fk_departure_stage = fromStation.pk
+                INNER JOIN station toStation ON route.fk_arrival_stage = toStation.pk
+                INNER JOIN zone fromZone ON fromZone.pk = fromStation.fk_zone
+                INNER JOIN zone toZone ON toZone.pk = toStation.fk_zone
+                INNER JOIN car ON car.pk = route.fk_car
+                LEFT JOIN reservation ON route.pk = reservation.fk_route
+                INNER JOIN pickuphour ON route.fk_hour = pickuphour.pk
        ";
     }
 
     public static function getRouteStation()
     {
-        return "select station.pk as stationId, concat(city.city_name, ' ', zone.zone_name, ' ', station.station_name) as stationName, station.station_address
-        from station
-        inner join zone on station.fk_zone = zone.pk
-        inner join city on zone.fk_city = city.pk
+        return "SELECT station.pk as stationId, 
+                    concat(city.city_name, ' ', zone.zone_name, ' ', station.station_name) as stationName, 
+                    station.station_address as stationAdress
+                from station
+                inner join zone on station.fk_zone = zone.pk
+                inner join city on zone.fk_city = city.pk
         ";
     }
 
     public static function getRoutePlace()
     {
-        return "SELECT (route.route_place - sum(coalesce(reservation.place, 0))) as place, route.deleted_at, route.fk_driver as driverId
-        FROM route
-        LEFT JOIN reservation ON reservation.fk_route = route.pk
-        WHERE route.pk = :pk
-        AND reservation.deleted_at IS NULL
-        GROUP BY route.pk
+        return "SELECT 
+                    (route.route_place - sum(coalesce(reservation.place, 0))) as place, 
+                    route.deleted_at, route.fk_driver as driverId
+                FROM route
+                LEFT JOIN reservation ON reservation.fk_route = route.pk
+                WHERE route.pk = :pk
+                AND reservation.deleted_at IS NULL
+                GROUP BY route.pk
         ";
     }
 
     public static function commonReservation()
     {
-        return "SELECT reservation.pk as reservationId, reservation.place as place, route.pk as routeId, route.route_date, route.route_price, 
-        pickuphour.hour,
-        fromStation.stationName as fStation, fromStation.stationDetail as fStationDetail, fromZone.zoneName as fZone, 
-        toStation.stationName as tStation, toStation.stationDetail as tStationDetail, toZone.zoneName as tZone,
-        car.registrationNumber, car.year,
-        carmodel.model_name, carbrand.brand_name, carcolor.color_name,
-        customer.first_name as driverFirstName, customer.last_name as driverLastName
-            FROM route
-            inner JOIN reservation ON route.pk = reservation.fk_route
-            INNER JOIN station fromStation ON route.fk_departure_stage = fromStation.pk
-            INNER JOIN station toStation ON route.fk_arrival_stage = toStation.pk
-            INNER JOIN zone fromZone ON fromZone.pk = fromStation.FK_Zone
-            INNER JOIN zone toZone ON toZone.pk = toStation.FK_Zone
-            INNER JOIN pickuphour ON route.FK_Hour = pickuphour.pk
-            inner join customer on route.fk_driver = customer.pk
-            inner join car on route.fk_car = car.pk
-            inner join carcolor on car.fk_carcolor = carcolor.pk
-            inner join carmodel on car.fk_carmodel = carmodel.pk
-            inner join carbrand on carmodel.fk_brand = carbrand.pk ";
+        return "SELECT 
+                    reservation.pk as reservationId, 
+                    reservation.place as place, 
+                    route.pk as routeId, 
+                    route.route_date as routeDate, 
+                    route.route_price as routePrice, 
+                    pickuphour.hour,
+                    fromStation.station_name as fStation, 
+                    fromStation.station_detail as fStationDetail, 
+                    fromZone.zone_name as fZone, 
+                    toStation.station_name as tStation, 
+                    toStation.station_detail as tStationDetail, 
+                    toZone.zone_name as tZone,
+                    car.registration_number as registrationNumber, 
+                    car.year,
+                    carmodel.model_name as modelName, 
+                    carbrand.brand_name as brandName, 
+                    carcolor.color_name as colorName,
+                    customer.first_name as driverFirstName, 
+                    customer.last_name as driverLastName
+                FROM route
+                inner JOIN reservation ON route.pk = reservation.fk_route
+                INNER JOIN station fromStation ON route.fk_departure_stage = fromStation.pk
+                INNER JOIN station toStation ON route.fk_arrival_stage = toStation.pk
+                INNER JOIN zone fromZone ON fromZone.pk = fromStation.FK_Zone
+                INNER JOIN zone toZone ON toZone.pk = toStation.FK_Zone
+                INNER JOIN pickuphour ON route.FK_Hour = pickuphour.pk
+                inner join customer on route.fk_driver = customer.pk
+                inner join car on route.fk_car = car.pk
+                inner join carcolor on car.fk_carcolor = carcolor.pk
+                inner join carmodel on car.fk_carmodel = carmodel.pk
+                inner join carbrand on carmodel.fk_brand = carbrand.pk ";
     }
 
     public static function getReservation()
@@ -178,7 +205,8 @@ final class QueryBuilder
         return self::commonQuery() .
             " WHERE route.route_date >= :date
                AND  route.fk_driver = :PK
-               AND route.deleted_at IS NULL 
+               AND route.deleted_at IS NULL
+               AND reservation.deleted_at IS NULL  
                GROUP BY route.pk 
                ORDER BY route.route_date";
     }
@@ -187,10 +215,10 @@ final class QueryBuilder
     {
         return "
         SELECT 
-		route.fk_driver as driver,
-		GROUP_CONCAT(reservation.pk) as reservationIds, 
-		GROUP_CONCAT(customer.last_name) as names, 
-		GROUP_CONCAT(customer.e_mail) as mails 
+            route.fk_driver as driver,
+            GROUP_CONCAT(reservation.pk) as reservationIds, 
+            GROUP_CONCAT(customer.last_name) as names, 
+            GROUP_CONCAT(customer.e_mail) as mails 
         FROM route 
         INNER JOIN reservation ON reservation.fk_route = route.pk 
         INNER JOIN customer ON reservation.fk_customer = customer.pk 
@@ -224,10 +252,10 @@ final class QueryBuilder
         return "
         SELECT 
             reservation.place, 
-	        customer.first_name,
-   	        customer.last_name,
-   	        customer.phone_number,
-   	        customer.e_mail
+	        customer.first_name as firstName,
+   	        customer.last_name as lastName,
+   	        customer.phone_number as phoneNumber,
+   	        customer.e_mail as eMail
         FROM reservation
         INNER JOIN customer ON reservation.fk_customer = customer.pk
         INNER JOIN route ON reservation.fk_route = route.pk

@@ -67,17 +67,17 @@ class ReservationOperation extends OperationBase
             return;
         }
         $reservation = new Reservations();
-        $reservation->PK = time() + $this->requestData->FK_Route + $this->requestData->FK_Customer;
+        $reservation->id = time() + $this->requestData->FK_Route + $this->requestData->FK_Customer;
         $reservation->reservationDate = date("Y-m-d H:i:s"); //property_exists($this->requestData, "reservationDate") ? $this->requestData->reservationDate : null;
-        $reservation->FK_Customer = $customerId;
-        $reservation->FK_Route = $routeId;
+        $reservation->fkCustomer = $customerId;
+        $reservation->fkRoute = $routeId;
         $reservation->place = $place;
         if ($this->shouldMakeReservation($routeId, $place, $customerId)) {
             $this->manager->insertData($reservation);
 
             if ($this->manager->operationResult->status == 200) {
                 $query = QueryBuilder::getReservation();
-                $this->manager->getDataByQuery($query, array(':PK' => $reservation->PK));
+                $this->manager->getDataByQuery($query, array(':PK' => $reservation->id));
 
                 $this->operationStatus = true;
                 MailUtils::sendReservationMail($customer, $this->manager->operationResult->response[0], $language);
@@ -114,8 +114,8 @@ class ReservationOperation extends OperationBase
             $reservation = new Reservations();
             $reservation->PK = $this->requestData->PK;
             if (property_exists($this->requestData, "reservationDate")) $reservation->reservationDate = $this->requestData->reservationDate;
-            if (property_exists($this->requestData, "FK_Customer")) $reservation->FK_Customer = $this->requestData->FK_Customer;
-            if (property_exists($this->requestData, "FK_Route")) $reservation->FK_Route = $this->requestData->FK_Route;
+            if (property_exists($this->requestData, "FK_Customer")) $reservation->fkCustomer = $this->requestData->FK_Customer;
+            if (property_exists($this->requestData, "FK_Route")) $reservation->fkRoute = $this->requestData->FK_Route;
             $this->manager->changeData($reservation);
             $this->readOne($reservation->PK);
             $this->operationStatus = true;
@@ -142,12 +142,11 @@ class ReservationOperation extends OperationBase
             $this->message = "Data Error";
             $this->status = DATA_ERROR;
         }
-        $this->manager->getData(Reservations::class, array("FK_Customer"), array("PK" => $reservationId));
+        $this->manager->getData(Reservations::class, array("fkCustomer"), array("id" => $reservationId));
         $result =  $this->manager->operationResult;
-        if($result->status == 200 && count($result->response)==1 && $result->response[0]->FK_Customer ==  $customerId )
-        {
+        if($result->status == 200 && count($result->response)==1 && $result->response[0]->fkCustomer ==  $customerId ) {
             $reservation = new Reservations();
-            $reservation->PK = $reservationId;
+            $reservation->id = $reservationId;
             $reservation->deletedAt = date("Y-m-d H:i:s");
             $this->manager->changeData($reservation);
             if( $this->manager->operationResult->status == 200) {

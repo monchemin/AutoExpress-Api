@@ -43,7 +43,7 @@ class PickupHourOperation extends OperationBase {
     {
         if($this->requestData != null && property_exists($this->requestData, "id")) {
             $pickupHour = new PickupHours();
-            $pickupHour->id = $this->requestData->id;
+            $pickupHour->Id = $this->requestData->id;
             if (property_exists($this->requestData, "hour")) $pickupHour->hour = $this->requestData->hour;
             if (property_exists($this->requestData, "displayOrder")) $pickupHour->displayOrder = $this->requestData->displayOrder;
             $this->manager->changeData($pickupHour);
@@ -59,7 +59,7 @@ class PickupHourOperation extends OperationBase {
     {
             if($this->Id != 0) {
             $pickupHour = new PickupHours();
-            $pickupHour->id = $this->Id;
+            $pickupHour->Id = $this->Id;
             $this->manager->deleteData($pickupHour);
             if($this->manager->operationResult->status == 200) {
                 $this->manager->getData(PickupHours::class, array(), array(), array("displayOrder"));

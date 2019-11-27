@@ -9,7 +9,7 @@ class PickupHours {
     /**
      * @TableColumn(columnName="pk", isPK="1")
      */
-    public $id;
+    public $Id;
     /**
      * @TableColumn(columnName="hour")
      */
