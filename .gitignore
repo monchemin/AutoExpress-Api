@@ -1,3 +1,5 @@
 .idea
 /vendor
-boot.php
+/config/profile-test.php
+/config/profile-prod.php
+/config/profile-staging.php

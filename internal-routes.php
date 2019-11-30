@@ -32,7 +32,7 @@ $uri = explode('/', $_SERVER['REQUEST_URI']);
     //echo "startdata".$startDate;
     $query = QueryBuilder::getInternalRoutes($fromStation, $toStation, $startDate, $endDate, $fromHour, $toHour);
 
-   // echo $query['sql'];
+    //echo $query['sql'];
     //print_r($query['var']);
     $mainResponse = array();
     $manager->getDataByQuery($query['sql'], $query['var']);

@@ -44,7 +44,7 @@ final class QueryBuilder
         }
 
         $statement = self::commonQuery() . $beginWhere;
-        $statement .= " AND route.deleted_at IS NULL AND reservation.deleted_at IS NULL";
+        $statement .= " AND route.deleted_at IS NULL";
         if (!empty($whereClause)) $statement .= " AND " . implode(" AND ", $whereClause);
         if ($between) $statement .= " AND pickuphour.display_order BETWEEN :fromHour AND :toHour";
 
@@ -122,6 +122,7 @@ final class QueryBuilder
                 INNER JOIN zone toZone ON toZone.pk = toStation.fk_zone
                 INNER JOIN car ON car.pk = route.fk_car
                 LEFT JOIN reservation ON route.pk = reservation.fk_route
+                    AND reservation.deleted_at IS NULL
                 INNER JOIN pickuphour ON route.fk_hour = pickuphour.pk
        ";
     }
@@ -144,6 +145,7 @@ final class QueryBuilder
                     route.deleted_at, route.fk_driver as driverId
                 FROM route
                 LEFT JOIN reservation ON reservation.fk_route = route.pk
+                    AND reservation.deleted_at IS NULL
                 WHERE route.pk = :pk
                 AND reservation.deleted_at IS NULL
                 GROUP BY route.pk
@@ -259,6 +261,7 @@ final class QueryBuilder
         FROM reservation
         INNER JOIN customer ON reservation.fk_customer = customer.pk
         INNER JOIN route ON reservation.fk_route = route.pk
+            AND reservation.deleted_at IS NULL
         WHERE route.pk = :PK
         AND   route.fk_driver = :driver
         ";

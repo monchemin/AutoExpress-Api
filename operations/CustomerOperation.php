@@ -91,9 +91,15 @@ class CustomerOperation extends OperationBase
 
             $customer = new Customers();
             $customer->Id = $customerId;
-            if (property_exists($this->requestData, "firstName")) $customer->firstName = $this->requestData->firstName;
-            if (property_exists($this->requestData, "lastName")) $customer->lastName = $this->requestData->lastName;
-            if (property_exists($this->requestData, "phoneNumber")) $customer->phoneNumber = $this->requestData->phoneNumber;
+            if (property_exists($this->requestData, "firstName") && !empty($this->requestData)) {
+                $customer->firstName = $this->requestData->firstName;
+            }
+            if (property_exists($this->requestData, "lastName") && !empty($this->lastName)) {
+                $customer->lastName = $this->requestData->lastName;
+            }
+            if (property_exists($this->requestData, "phoneNumber") && !empty($this->phoneNumber)) {
+                $customer->phoneNumber = $this->requestData->phoneNumber;
+            }
             $this->manager->changeData($customer);
             if ($this->manager->operationResult->status == 200) {
                 $this->operationStatus = true;

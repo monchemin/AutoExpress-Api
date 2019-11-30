@@ -8,34 +8,10 @@ require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorUti
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorData', 'FactorMysqlManager.php']);
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorData', 'IFactorDbManager.php']);
 require_once join(DIRECTORY_SEPARATOR, ['operations', 'OperationBase.php']);
+require_once join(DIRECTORY_SEPARATOR, ['config', 'profile.php']);
 
 
-
-//echo join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorAnnotations.php']);
-//use Factor\FactorOperations\FactorManager;
 use FactorOperations\FactorManager;
-
-DEFINE("DEV", $_SERVER['HTTP_HOST'] === 'localhost');
-
-if(DEV) {
-    DEFINE('ENGINE', 'Mysql');
-    DEFINE('HOST', '127.0.0.1');
-    DEFINE('DBNAME', 'oulift');
-    DEFINE('USER', 'root');
-    DEFINE('PASSWORD', 'Geo');
-}
-else
-{
-    DEFINE('ENGINE', 'Mysql');
-   /* DEFINE('HOST', 'mysql1-p2.ezhostingserver.com'); //216.15.188.161 mysql1-p2.ezhostingserver.com
-    DEFINE('DBNAME', 'autoexpress');
-    DEFINE('USER', 'autoexpress');
-    DEFINE('PASSWORD', 'Autoexpress@123'); */
-    DEFINE('HOST', '185.98.131.90'); //216.15.188.161 mysql1-p2.ezhostingserver.com
-    DEFINE('DBNAME', 'tonco1146560');
-    DEFINE('USER', 'tonco1146560');
-    DEFINE('PASSWORD', 'toncopilote');
-}
 
 $dbConnection = array('dbdriver'    => ENGINE,
                         'host'      => HOST,
@@ -45,6 +21,6 @@ $dbConnection = array('dbdriver'    => ENGINE,
                         'unix_socket' => '/tmp/mysql.sock'
                       );
 $manager = FactorManager::create($dbConnection);
-//echo json_encode($manager->managerOperationResult);
+
 return $manager;
 ?>
