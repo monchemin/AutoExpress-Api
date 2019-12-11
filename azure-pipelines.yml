@@ -4,14 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-  branches:
-    include:
-      - master
-    exclude:
-      - staging
+- staging
 
 variables:
-- group: testVariables
+- group: stagingVariables
 
 pool:
   vmImage: 'Ubuntu-16.04'
