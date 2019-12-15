@@ -131,7 +131,7 @@ final class QueryBuilder
     {
         return "SELECT station.pk as stationId, 
                     concat(city.city_name, ' ', zone.zone_name, ' ', station.station_name) as stationName, 
-                    station.station_address as stationAdress
+                    station.station_address as stationAddress
                 from station
                 inner join zone on station.fk_zone = zone.pk
                 inner join city on zone.fk_city = city.pk
