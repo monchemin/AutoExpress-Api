@@ -4,7 +4,11 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-- staging
+  branches:
+    include:
+    - staging
+    exclude:
+    - master
 
 variables:
 - group: stagingVariables
