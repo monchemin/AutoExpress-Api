@@ -1,5 +1,4 @@
 .idea
-/vendor
-/config/profile-test.php
+/config/mercure-profile.php
 /config/profile-prod.php
 /config/profile-staging.php
