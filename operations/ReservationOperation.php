@@ -67,7 +67,7 @@ class ReservationOperation extends OperationBase
             return;
         }
         $reservation = new Reservations();
-        $reservation->id = time() + $this->requestData->FK_Route + $this->requestData->FK_Customer;
+        $reservation->id = time() + $routeId + $customerId;
         $reservation->reservationDate = date("Y-m-d H:i:s"); //property_exists($this->requestData, "reservationDate") ? $this->requestData->reservationDate : null;
         $reservation->fkCustomer = $customerId;
         $reservation->fkRoute = $routeId;

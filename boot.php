@@ -8,7 +8,7 @@ require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorOperations', 'FactorUti
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorData', 'FactorMysqlManager.php']);
 require_once join(DIRECTORY_SEPARATOR, ['factor', 'FactorData', 'IFactorDbManager.php']);
 require_once join(DIRECTORY_SEPARATOR, ['operations', 'OperationBase.php']);
-require_once join(DIRECTORY_SEPARATOR, ['config', 'profile.php']);
+require_once join(DIRECTORY_SEPARATOR, ['..', 'profile.php']);
 
 
 use FactorOperations\FactorManager;

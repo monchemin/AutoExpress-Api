@@ -2,7 +2,7 @@
 
 namespace FactorOperations;
 
-/* BaobadManager : classe manager qui gère la communication avec l'interface utilisateur
+/*
 *   @version 1.0
 *   @author : NK
 *

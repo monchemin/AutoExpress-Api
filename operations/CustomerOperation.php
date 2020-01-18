@@ -4,11 +4,13 @@ namespace Operations;
 
 use Entities\Customers;
 use FactorOperations\FactorManager;
+use Queries\QueryBuilder;
 use utils\MailUtils;
 
 require_once join(DIRECTORY_SEPARATOR, ['entities', 'Customers.php']);
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'MailUtils.php']);
 require_once join(DIRECTORY_SEPARATOR, ['utils', 'errorCode.php']);
+require_once join(DIRECTORY_SEPARATOR, ['queries', 'QueryBuilder.php']);
 
 
 class CustomerOperation extends OperationBase
@@ -57,7 +59,7 @@ class CustomerOperation extends OperationBase
         $customer->lastName = $lastName;
         $customer->eMail = $mail;
         $customer->phoneNumber = $number;
-        $customer->password = $pass;
+        $customer->password = md5($pass);
         $customer->createdAt = date("Y-m-d H:i:s");
         $code = mt_rand(100000, 999999);
         $customer->activationCode = $code;
@@ -171,7 +173,7 @@ class CustomerOperation extends OperationBase
         $response = array();
         if ($this->requestData != null && property_exists($this->requestData, "login")) {
             $this->manager->getData(Customers::class, array("Id", "firstName", "lastName", "eMail", "phoneNumber", "drivingNumber", "active"),
-                array("eMail" => $this->requestData->login, "password" => $this->requestData->password)
+                array("eMail" => $this->requestData->login, "password" => md5($this->requestData->password))
             );
             if ($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response) == 1) {
                 $response['status'] = 200;
@@ -209,7 +211,7 @@ class CustomerOperation extends OperationBase
         if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->Id == $customerId) {
             $customer = new Customers();
             $customer->Id = $customerId;
-            $customer->password = $newPassword;
+            $customer->password = md5($newPassword);
             $this->manager->changeData($customer);
             $this->operationStatus = true;
         } else {
@@ -333,9 +335,74 @@ class CustomerOperation extends OperationBase
         return $this->operationResult();
     }
 
+    public function passwordRecovery()
+    {
+        if ($this->requestData == null) {
+            $this->message = "No provided data";
+            $this->status = NO_PROVIDED_DATA;
+            return $this->operationResult();
+        }
+
+        $newMail = property_exists($this->requestData, "eMail") ? $this->requestData->eMail : null;
+        $language = property_exists($this->requestData, "language") ? $this->requestData->language : "fr";
+        if (empty($newMail)) {
+            $this->message = "Data empty";
+            $this->status = DATA_EMPTY;
+            return $this->operationResult();
+        }
+
+       $genPass = $this->generateStrongPassword();
+        $query = QueryBuilder::passwordRecovery();
+        $vars = array(':password' => md5($genPass), ':email' => $newMail);
+        $this->manager->execute($query, $vars, false);
+        MailUtils::sendPasswordRecoveryMail($newMail, $genPass, $language);
+        $this->operationStatus = true;
+        return $this->operationResult();
+    }
+
     protected function operationResult()
     {
         return $this->operationStatus ? $this->manager->operationResult : array("status" => $this->status, "errorMessage" => $this->message);
+    }
+
+    function generateStrongPassword($length = 6, $add_dashes = false, $available_sets = 'luds')
+    {
+        $sets = array();
+        if(strpos($available_sets, 'l') !== false)
+            $sets[] = 'abcdefghjkmnpqrstuvwxyz';
+        if(strpos($available_sets, 'u') !== false)
+            $sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+        if(strpos($available_sets, 'd') !== false)
+            $sets[] = '23456789';
+        if(strpos($available_sets, 's') !== false)
+            $sets[] = '!@#$%&*?';
+
+        $all = '';
+        $password = '';
+        foreach($sets as $set)
+        {
+            $password .= $set[array_rand(str_split($set))];
+            $all .= $set;
+        }
+
+        $all = str_split($all);
+        for($i = 0; $i < $length - count($sets); $i++)
+            $password .= $all[array_rand($all)];
+
+        $password = str_shuffle($password);
+
+        if(!$add_dashes)
+            return $password;
+
+        $dash_len = floor(sqrt($length));
+        $dash_str = '';
+        while(strlen($password) > $dash_len)
+        {
+            $dash_str .= substr($password, 0, $dash_len) . '-';
+            $password = substr($password, $dash_len);
+        }
+        $dash_str .= $password;
+        return $dash_str;
     }
 }
 

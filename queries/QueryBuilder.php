@@ -267,4 +267,12 @@ final class QueryBuilder
         ";
     }
 
+    public static function passwordRecovery(){
+        return "
+            UPDATE customer
+            SET password = :password
+            WHERE e_mail = :email
+        ";
+    }
+
 }
