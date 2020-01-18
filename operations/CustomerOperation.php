@@ -25,12 +25,36 @@ class CustomerOperation extends OperationBase
 
     }
 
-    protected function read()
+    public function process()
     {
 
-        ($this->Id != 0) ? $this->readOne($this->Id) : $this->manager->getData(Customers::class);
-        $this->operationStatus = true;
+        switch ($this->httpMethod) {
+            case "POST" :
+                if ($this->requestData != null && property_exists($this->requestData, "checkLogin")) return $this->loginExists();
+                $this->create();
+                //$this->read();
+                break;
+            case "PUT" :
+                $this->update();
+                break;
+            case "GET" :
+                $this->read();
+                break;
+            case "DELETE" :
+                $this->delete();
+                $this->read();
+        }
+        return $this->operationResult();
 
+    }
+
+    private function loginExists()
+    {
+        $loginExists = false;
+        $this->manager->getData(Customers::class, array(), array("eMail" => $this->requestData->eMail));
+        $loginResult = $this->manager->operationResult;
+        if ($loginResult->status == 200 && $loginResult->response != null) $loginExists = true;
+        return $loginExists;
     }
 
     protected function create()
@@ -59,7 +83,7 @@ class CustomerOperation extends OperationBase
         $customer->lastName = $lastName;
         $customer->eMail = $mail;
         $customer->phoneNumber = $number;
-        $customer->password = md5($pass);
+        $customer->password = $this->encrypt($pass);
         $customer->createdAt = date("Y-m-d H:i:s");
         $code = mt_rand(100000, 999999);
         $customer->activationCode = $code;
@@ -68,6 +92,11 @@ class CustomerOperation extends OperationBase
             $this->operationStatus = true;
             MailUtils::sendActivationMail($mail, $lastName, $code, $language);
         }
+    }
+
+    private function encrypt($word)
+    {
+        return md5($word);
     }
 
     protected function update()
@@ -117,6 +146,14 @@ class CustomerOperation extends OperationBase
 
     }
 
+    protected function read()
+    {
+
+        ($this->Id != 0) ? $this->readOne($this->Id) : $this->manager->getData(Customers::class);
+        $this->operationStatus = true;
+
+    }
+
     public function readOne($pk)
     {
         $this->manager->getData(Customers::class, array(), array("Id" => $pk));
@@ -130,42 +167,14 @@ class CustomerOperation extends OperationBase
             $customer = new Customers();
 
             $customer->Id = $this->Id;
-           // $this->manager->deleteData($customer);
+            // $this->manager->deleteData($customer);
             $this->operationStatus = true;
         }
     }
 
-    private function loginExists()
+    protected function operationResult()
     {
-        $loginExists = false;
-        $this->manager->getData(Customers::class, array(), array("eMail" => $this->requestData->eMail));
-        $loginResult = $this->manager->operationResult;
-        if ($loginResult->status == 200 && $loginResult->response != null) $loginExists = true;
-        return $loginExists;
-    }
-
-
-    public function process()
-    {
-
-        switch ($this->httpMethod) {
-            case "POST" :
-                if ($this->requestData != null && property_exists($this->requestData, "checkLogin")) return $this->loginExists();
-                $this->create();
-                //$this->read();
-                break;
-            case "PUT" :
-                $this->update();
-                break;
-            case "GET" :
-                $this->read();
-                break;
-            case "DELETE" :
-                $this->delete();
-                $this->read();
-        }
-        return $this->operationResult();
-
+        return $this->operationStatus ? $this->manager->operationResult : array("status" => $this->status, "errorMessage" => $this->message);
     }
 
     public function login()
@@ -173,7 +182,7 @@ class CustomerOperation extends OperationBase
         $response = array();
         if ($this->requestData != null && property_exists($this->requestData, "login")) {
             $this->manager->getData(Customers::class, array("Id", "firstName", "lastName", "eMail", "phoneNumber", "drivingNumber", "active"),
-                array("eMail" => $this->requestData->login, "password" => md5($this->requestData->password))
+                array("eMail" => $this->requestData->login, "password" => $this->encrypt($this->requestData->password))
             );
             if ($this->manager->operationResult->status == 200 && count($this->manager->operationResult->response) == 1) {
                 $response['status'] = 200;
@@ -211,7 +220,7 @@ class CustomerOperation extends OperationBase
         if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->Id == $customerId) {
             $customer = new Customers();
             $customer->Id = $customerId;
-            $customer->password = md5($newPassword);
+            $customer->password = $this->encrypt($newPassword);
             $this->manager->changeData($customer);
             $this->operationStatus = true;
         } else {
@@ -239,7 +248,7 @@ class CustomerOperation extends OperationBase
             return $this->operationResult();
         }
 
-        $this->manager->getData(Customers::class, array("Id", "firstName"), array("eMail" => $oldMail, "password" => $password));
+        $this->manager->getData(Customers::class, array("Id", "firstName"), array("eMail" => $oldMail, "password" => $this->encrypt($password)));
         $result = $this->manager->operationResult;
         if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->Id == $customerId) {
             $customer = new Customers();
@@ -280,7 +289,7 @@ class CustomerOperation extends OperationBase
             return $this->operationResult();
         }
 
-        $this->manager->getData(Customers::class, array("Id", "active"), array("eMail" => $mail, "password" => $password));
+        $this->manager->getData(Customers::class, array("Id", "active"), array("eMail" => $mail, "password" => $this->encrypt($password)));
         $result = $this->manager->operationResult;
         if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->Id == $customerId) {
             if ($result->response[0]->active) {
@@ -319,7 +328,7 @@ class CustomerOperation extends OperationBase
             return $this->operationResult();
         }
 
-        $this->manager->getData(Customers::class, array("Id", "activationCode"), array("eMail" => $mail, "password" => $password));
+        $this->manager->getData(Customers::class, array("Id", "activationCode"), array("eMail" => $mail, "password" => $this->encrypt($password)));
         $result = $this->manager->operationResult;
         if ($result->status == 200 && count($result->response) == 1 && $result->response[0]->Id == $customerId && $result->response[0]->activationCode == $code) {
             $customer = new Customers();
@@ -351,59 +360,53 @@ class CustomerOperation extends OperationBase
             return $this->operationResult();
         }
 
-       $genPass = $this->generateStrongPassword();
+        $genPass = $this->generateStrongPassword();
         $query = QueryBuilder::passwordRecovery();
-        $vars = array(':password' => md5($genPass), ':email' => $newMail);
+        $vars = array(':password' => $this->encrypt($genPass), ':email' => $newMail);
         $this->manager->execute($query, $vars, false);
         MailUtils::sendPasswordRecoveryMail($newMail, $genPass, $language);
         $this->operationStatus = true;
         return $this->operationResult();
     }
 
-    protected function operationResult()
-    {
-        return $this->operationStatus ? $this->manager->operationResult : array("status" => $this->status, "errorMessage" => $this->message);
-    }
-
     function generateStrongPassword($length = 6, $add_dashes = false, $available_sets = 'luds')
     {
         $sets = array();
-        if(strpos($available_sets, 'l') !== false)
+        if (strpos($available_sets, 'l') !== false)
             $sets[] = 'abcdefghjkmnpqrstuvwxyz';
-        if(strpos($available_sets, 'u') !== false)
+        if (strpos($available_sets, 'u') !== false)
             $sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
-        if(strpos($available_sets, 'd') !== false)
+        if (strpos($available_sets, 'd') !== false)
             $sets[] = '23456789';
-        if(strpos($available_sets, 's') !== false)
+        if (strpos($available_sets, 's') !== false)
             $sets[] = '!@#$%&*?';
 
         $all = '';
         $password = '';
-        foreach($sets as $set)
-        {
+        foreach ($sets as $set) {
             $password .= $set[array_rand(str_split($set))];
             $all .= $set;
         }
 
         $all = str_split($all);
-        for($i = 0; $i < $length - count($sets); $i++)
+        for ($i = 0; $i < $length - count($sets); $i++)
             $password .= $all[array_rand($all)];
 
         $password = str_shuffle($password);
 
-        if(!$add_dashes)
+        if (!$add_dashes)
             return $password;
 
         $dash_len = floor(sqrt($length));
         $dash_str = '';
-        while(strlen($password) > $dash_len)
-        {
+        while (strlen($password) > $dash_len) {
             $dash_str .= substr($password, 0, $dash_len) . '-';
             $password = substr($password, $dash_len);
         }
         $dash_str .= $password;
         return $dash_str;
     }
+
 }
 
 ?>

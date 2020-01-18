@@ -142,7 +142,7 @@ final class QueryBuilder
     {
         return "SELECT 
                     (route.route_place - sum(coalesce(reservation.place, 0))) as place, 
-                    route.deleted_at, route.fk_driver as driverId
+                    route.deleted_at as deletedAt, route.fk_driver as driverId
                 FROM route
                 LEFT JOIN reservation ON reservation.fk_route = route.pk
                     AND reservation.deleted_at IS NULL
