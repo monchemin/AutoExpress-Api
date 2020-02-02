@@ -14,6 +14,10 @@ class CarColors {
      * @TableColumn(columnName="color_name")
      */
     public $colorName;
+    /**
+     * @TableColumn(columnName="color_label")
+     */
+    public $colorLabel;
 
 }
 ?>

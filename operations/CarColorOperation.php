@@ -25,6 +25,7 @@ class CarColorOperation extends OperationBase {
         if($this->requestData != null && $this->requestData->colorName != null) {
             $carColor = new CarColors();
             $carColor->colorName = $this->requestData->colorName;
+            $carColor->colorLabel = $this->requestData->colorLabel;
             $this->manager->insertData($carColor);
             $this->operationStatus = true;
         }
@@ -36,6 +37,7 @@ class CarColorOperation extends OperationBase {
             $carColor = new CarColors();
             $carColor->Id = $this->requestData->Id;
             if  (property_exists($this->requestData, "colorName") ) $carColor->colorName = $this->requestData->colorName;
+            if  (property_exists($this->requestData, "colorLabel") ) $carColor->colorLabel = $this->requestData->colorLabel;
             $this->manager->changeData($carColor);
             //$this->readOne($carColor->PK);
             $this->operationStatus = true;
@@ -63,8 +65,6 @@ class CarColorOperation extends OperationBase {
 
     public function process()
     {
-
-
         switch ($this->httpMethod) {
             case "POST" :
                 $this->create();
