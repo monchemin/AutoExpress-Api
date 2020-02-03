@@ -6,9 +6,10 @@
 trigger:
   branches:
     include:
-      - master
+      - release/mercure
     exclude:
       - staging
+      - master
 
 variables:
 - group: testVariables
