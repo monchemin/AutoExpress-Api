@@ -172,6 +172,7 @@ final class QueryBuilder
                     carmodel.model_name as modelName, 
                     carbrand.brand_name as brandName, 
                     carcolor.color_name as colorName,
+                    carcolor.color_label as colorLabel,
                     customer.first_name as driverFirstName, 
                     customer.last_name as driverLastName
                 FROM route
@@ -229,10 +230,11 @@ final class QueryBuilder
         GROUP BY route.pk";
     }
 
-    public static function updateReservations($count) {
+    public static function updateReservations($count)
+    {
         $in = "?";
-        if($count > 1) {
-           $in = str_repeat("?,", $count-1)."?";
+        if ($count > 1) {
+            $in = str_repeat("?,", $count - 1) . "?";
         }
 
         return "
@@ -242,7 +244,8 @@ final class QueryBuilder
         ";
     }
 
-    public static function routeDelete() {
+    public static function routeDelete()
+    {
         return "
         UPDATE route
         SET deleted_at = NOW()
@@ -250,7 +253,8 @@ final class QueryBuilder
         ";
     }
 
-    public static function routeReservations() {
+    public static function routeReservations()
+    {
         return "
         SELECT 
             reservation.place, 
@@ -267,7 +271,8 @@ final class QueryBuilder
         ";
     }
 
-    public static function passwordRecovery(){
+    public static function passwordRecovery()
+    {
         return "
             UPDATE customer
             SET password = :password
